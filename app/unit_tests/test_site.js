@@ -16,28 +16,50 @@ describe('Test site.js', function() {
 
 describe('teamform-admin-app', function() {
 
-	var createController, $scope;
+	var $controller, $scope;
 
-	beforeEach(inject(function($rootScope, _$controller_){
-        $scope = $rootScope.$new();
-		
-		createController = function() {
-            return $controller('teamform-admin-app', {
-                '$scope': $scope
-            });
-        };
-	}));
+	beforeEach(function(){
+		module('teamform-admin-app', 'firebase');
+			inject(function(_$rootScope_, _$controller_, _$firebaseObject_,_$firebaseArray_){
+			myscope = _$rootScope_.$new();
+			$firebaseObject = _$firebaseObject_;
+			$firebaseArray = _$firebaseArray_;
+			$controller = _$controller_;
+		});
+	});
 	
 
 
 	  it('change min size to 3', function() {
-	  	$scope.changeMinTeamSize(3);
-	  	expect($scope.param.minTeamSize).toBe(3);
+	  	var myscope = {};		
+		var controller = $controller('AdminCtrl',{$scope:myscope});
+		var testarray = $firebaseArray;
+		myscope.param = {};
+		//initalizeFirebase();
+		var refPath, ref, eventName;
+		eventName = "test";
+		refPath = eventName + "/admin/param";	
+		ref = firebase.database().ref(refPath);
+		myscope.param = $firebaseObject(ref);
+		
+		//$scope.param.$loaded().then;
+		myscope.changeMinTeamSize(3);
+	  	expect(myscope.param.minTeamSize).toBe(3);
 	  });
 	  
 	  it('change max size to 10', function() {
-	  	$scope.changeMaxTeamSize(10);
-	  	expect($scope.param.minTeamSize).toBe(10);
+	  	var myscope = {};
+		var controller = $controller('AdminCtrl',{$scope:$scope});
+		
+		$scope.param = {};
+		var refPath, ref, eventName;
+		eventName = "test";
+		refPath = eventName + "/admin/param";	
+		ref = firebase.database().ref(refPath);
+		
+		//$scope.param.$loaded().then
+	  	$scope.changeMaxTeamSize(9);
+	  	expect($scope.param.maxTeamSize).toBe(9);
 	  });
 	  
 	  
