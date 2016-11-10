@@ -1,5 +1,4 @@
-initalizeFirebase();
-      var initApp = function() {
+	var initApp = function() {initalizeFirebase();
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
