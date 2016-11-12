@@ -52,11 +52,47 @@
                 </div>
                 <div class=" col-md-9 col-lg-9 ">
                   <table class="table table-user-information">
-                    <tbody>
+                    <tbody> 
                       <tr>
                         <td>Email</td>
                         <td id="email"></td>
                       </tr> 
+                      <tr>
+                        <td>Interests</td>
+                        <td>
+                          <ul class="list-group">
+                            <li class="list-group-item"  ng-repeat="interest_obj in interests" text-transform="capitalize">
+                              {{interest_obj.$id}}
+                              <button class="btn btn-secondary btn-xs glyphicon glyphicon-remove" type="button" ng-click="removeInterest(interest_obj)" style="float: right;top;"></button>
+                            </li>
+                          </ul>
+                          <div class="input-group">
+                            <input type="text" class="form-control" id="newInterest" placeholder="Add your interest here">
+
+                            <span class="input-group-btn">
+                              <button class="btn btn-secondary" type="button" ng-click="addInterest()">Add</button>
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Skills</td>
+                        <td>
+                          <ul class="list-group">
+                            <li class="list-group-item"  ng-repeat="skill_obj in skills" text-transform="capitalize">
+                              {{skill_obj.$id}}
+                              <button class="btn btn-secondary btn-xs glyphicon glyphicon-remove" type="button" ng-click="removeSkill(skill_obj)" style="float: right;top;"></button>
+                            </li>
+                          </ul>
+                          <div class="input-group">
+                            <input type="text" class="form-control" id="newSkill" placeholder="Add your skill here">
+
+                            <span class="input-group-btn">
+                              <button class="btn btn-secondary" type="button" ng-click="addSkill()">Add</button>
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
