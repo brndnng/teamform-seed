@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	$('#team_page_controller').hide();
+	$('#skills').hide();
 	$('#text_event_name').text("Error: Invalid event name ");
 	var eventName = getURLParameter("q");
 	if (eventName != null && eventName !== '' ) {
@@ -62,13 +63,33 @@ angular.module('teamform-team-app', ['firebase'])
 	$scope.team = [];
 	$scope.team = $firebaseArray(firebase.database().ref(refPath));
 	
-	
+	refPath = "users/";
+	$scope.users = [];
+	$scope.users = $firebaseArray(firebase.database().ref(refPath));
+	$scope.filteredUsers = [];
+
+	/*for (i=0; i<$scope.users.length; i++){
+		console.log($scope.users.$id);
+	}*/
+	/*$.each($scope.member, function(i,mobj){
+		console.log(5);
+		$.each($scope.users, function(i,obj){
+			if (obj.$id == mobj.$id)
+				$scope.filteredUsers.push(obj);
+				console.log(mobj.$id);
+
+		});
+		$scope.apply();
+	});*/
+
 	$scope.requests = [];
 	$scope.wantedSkills = [];
 	$scope.refreshViewRequestsReceived = function() {
 		
 		//$scope.test = "";		
 		$scope.requests = [];
+		$scope.filteredUsers = [];
+		
 		var teamID = $.trim( $scope.param.teamName );	
 				
 		$.each($scope.member, function(i,obj) {			
@@ -91,6 +112,12 @@ angular.module('teamform-team-app', ['firebase'])
                 		joined_teams_ref.child(teamID).set(getURLParameter("q"));
             	});
 			}
+			$.each($scope.users, function(i,mobj){
+				var m = mobj.$id;
+				if(m===userID) {
+           		$scope.filteredUsers.push(mobj);
+           		} 
+			});
 		});
 		
 		$scope.$apply();
@@ -123,7 +150,6 @@ angular.module('teamform-team-app', ['firebase'])
 				'size': $scope.param.currentTeamSize,
 				'teamMembers': $scope.param.teamMembers,
 				'teamLeader': current_uid,
-				'wantedSkills': $scope.param.wantedSkills
 			};		
 			
 			var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
@@ -151,7 +177,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 			});
 			// for each wanted skills
-			$.each($scope.param.wantedSkills, function(i,obj){
+			/*$.each($scope.wantedSkills, function(i,obj){
 				
 				
 				//$scope.test += obj;
@@ -161,7 +187,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 				
 				
-			});
+			});*/
 
 			
 			ref.set(newData, function(){			
@@ -180,7 +206,7 @@ angular.module('teamform-team-app', ['firebase'])
 	}
 	
 	$scope.loadFunc = function() {
-		
+		$('#skills').show();
 		var teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
