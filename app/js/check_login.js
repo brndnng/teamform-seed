@@ -148,7 +148,7 @@
             document.getElementById('sign-in-status').textContent = 'Signed out';
             document.getElementById('account-details').textContent = '';
             document.getElementById('user-info').style.display = 'none';
-            document.getElementById('showInfo').style.display = 'block';
+            document.getElementById('showInfo').style.display = 'none';
 
           }
         }, function(error) {
