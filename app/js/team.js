@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	$('#team_page_controller').hide();
+	$('#skills').hide();
 	$('#text_event_name').text("Error: Invalid event name ");
 	var eventName = getURLParameter("q");
 	if (eventName != null && eventName !== '' ) {
@@ -149,7 +150,6 @@ angular.module('teamform-team-app', ['firebase'])
 				'size': $scope.param.currentTeamSize,
 				'teamMembers': $scope.param.teamMembers,
 				'teamLeader': current_uid,
-				'wantedSkills': $scope.param.wantedSkills
 			};		
 			
 			var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
@@ -177,7 +177,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 			});
 			// for each wanted skills
-			$.each($scope.param.wantedSkills, function(i,obj){
+			/*$.each($scope.wantedSkills, function(i,obj){
 				
 				
 				//$scope.test += obj;
@@ -187,7 +187,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 				
 				
-			});
+			});*/
 
 			
 			ref.set(newData, function(){			
@@ -206,7 +206,7 @@ angular.module('teamform-team-app', ['firebase'])
 	}
 	
 	$scope.loadFunc = function() {
-		
+		$('#skills').show();
 		var teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
