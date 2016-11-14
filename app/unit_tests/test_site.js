@@ -1,4 +1,6 @@
 'use strict';
+//var MockFirebase = require('mockfirebase').MockFirebase;
+//MockFirebase.override();
 describe('Test site.js', function() {
 	
    //
@@ -47,16 +49,22 @@ describe('Test site.js', function() {
 
 
 describe('Test admin.js', function() {
-
 	var $controller, $scope, $firebaseObject, $firebaseArray, $firebaseUtils;
-	beforeEach(angular.mock.module('teamform-admin-app'));
-	beforeEach(function() {module('firebase'), module('teamform-team-app')});
-	beforeEach(inject(function(_$controller_,_$firebaseObject_,_$firebaseArray_, _$firebaseUtils_, _$rootScope_){
+	//beforeEach(angular.mock.module('teamform-admin-app'));
+	beforeEach(function() {
+		module('firebase');
+		module('teamform-admin-app');
+	});
+	beforeEach(inject(function($rootScope) {
+    $scope = $rootScope.$new();        
+	}));
+	beforeEach(inject(function(_$controller_,_$firebaseObject_,_$firebaseArray_, _$firebaseUtils_){
 		$controller = _$controller_;
 		$firebaseObject = _$firebaseObject_;
 		$firebaseArray = _$firebaseArray_;
 		$firebaseUtils = _$firebaseUtils_;
-		$scope = _$rootScope_.$new();
+		//initalizeFirebase();
+
 	}));
 /*
 	  describe('change min size Coverage Test', function() {
@@ -85,10 +93,16 @@ describe('Test admin.js', function() {
 			expect($scope.param.maxTeamSize).toBe(9);
 		  });
 	  });
-*/	  
+*/
+initalizeFirebase();
 	  describe('create and remove firebase object', function() {
-		  it('should work on a query', function(done) {
+		it('should work on a query', function(done) {
+
+  //firebase.initializeApp(config);
+  			  		
+
 		  var ref =  stubRef();
+		  //var ref = testApp.database().ref("/unit_test").push();
 		  ref.set({foo: 'bar'});
 		  var query = ref.limitToLast(3); 
 		  var obj = $firebaseObject(query);  // create a firebase object
@@ -106,7 +120,9 @@ describe('Test admin.js', function() {
 	  
 	describe('change min size Coverage Test', function() {
 		  it('should change min size to 3', function(done) {
+		  	//initalizeFirebase();
 		  var ref = stubRef();
+		  //var ref = testApp.database().ref("/unit_test").push();
 //		  ref.set({param.mixTeamSize: 1});
 		  var query = ref.limitToLast(3); 
 		  var obj = $firebaseObject(query);  // create a firebase object
@@ -167,3 +183,7 @@ describe('Test team.js', function() {
 	
 }); 
 */
+
+function stubRef() {
+	return firebase.database().ref().push();
+  		};

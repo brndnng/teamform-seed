@@ -27,7 +27,8 @@ function getRandomIntInclusive(min, max) {
 //
 
 function initalizeFirebase() {
-	
+	if (firebase.apps.length === 0) {
+
   // Initialize Firebase
   var config = {
     apiKey: "AIzaSyA_L1m-6paz02g2gxvdF0aT2F6suG5Cy_k",
@@ -36,6 +37,7 @@ function initalizeFirebase() {
     storageBucket: "comp3111-dcd88.appspot.com"
   };
   firebase.initializeApp(config);
+}
 
 }    
 
