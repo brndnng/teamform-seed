@@ -1,3 +1,4 @@
+'use strict';
 describe('Test site.js', function() {
 	
    //
@@ -47,12 +48,14 @@ describe('Test site.js', function() {
 
 describe('Test admin.js', function() {
 
-	var $controller, $scope;
+	var $controller, $scope, $firebaseObject, $firebaseArray, $firebaseUtils;
 	beforeEach(angular.mock.module('teamform-admin-app'));
-	beforeEach(module('teamform-team-app'));
-	beforeEach(inject(function(_$controller_,_$firebaseObject_, _$rootScope_){
+	beforeEach(function() {module('firebase'), module('teamform-team-app')});
+	beforeEach(inject(function(_$controller_,_$firebaseObject_,_$firebaseArray_, _$firebaseUtils_, _$rootScope_){
 		$controller = _$controller_;
 		$firebaseObject = _$firebaseObject_;
+		$firebaseArray = _$firebaseArray_;
+		$firebaseUtils = _$firebaseUtils_;
 		$scope = _$rootScope_.$new();
 	}));
 /*
@@ -85,7 +88,7 @@ describe('Test admin.js', function() {
 */	  
 	  describe('create and remove firebase object', function() {
 		  it('should work on a query', function(done) {
-		  var ref = stubRef();
+		  var ref =  stubRef();
 		  ref.set({foo: 'bar'});
 		  var query = ref.limitToLast(3); 
 		  var obj = $firebaseObject(query);  // create a firebase object
@@ -108,7 +111,7 @@ describe('Test admin.js', function() {
 		  var query = ref.limitToLast(3); 
 		  var obj = $firebaseObject(query);  // create a firebase object
 
-		  obj.$loaded().then(function () {  // the callback function
+		  obj.$loaded().then(function (data) {  // the callback function
 		    obj.changeMinTeamSize(9)
 			expect(obj.param.maxTeamSize).toBe('9');  // we only test the value when the firebase object is ready
 		  }).then(function () {
