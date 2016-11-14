@@ -164,10 +164,28 @@
 					<ul ng-repeat="t in team">
 						<li>
 						
-							User ID: {{t.$id}}  <br>
+							Team Name: {{t.$id}}  <br>
 							Preferred team size: <span class="badge">{{t.size}}</span> <br>
 							Current team members: {{t.teamMembers}}
 						
+						</li>
+						
+					</ul>			
+			
+			</div>
+
+			<div class="col-md-4 col-xs-4 text-left">
+			
+					
+			 
+					<h3>All event members:</h3>
+					
+					<ul ng-repeat="m in filteredUsers">
+						<li>
+						
+							User ID: {{m.$id}}  <br>
+							Name: {{m.name}} <br>
+							Skills: {{m.skills |json}}
 						</li>
 						
 					</ul>			

@@ -62,13 +62,33 @@ angular.module('teamform-team-app', ['firebase'])
 	$scope.team = [];
 	$scope.team = $firebaseArray(firebase.database().ref(refPath));
 	
-	
+	refPath = "users/";
+	$scope.users = [];
+	$scope.users = $firebaseArray(firebase.database().ref(refPath));
+	$scope.filteredUsers = [];
+
+	/*for (i=0; i<$scope.users.length; i++){
+		console.log($scope.users.$id);
+	}*/
+	/*$.each($scope.member, function(i,mobj){
+		console.log(5);
+		$.each($scope.users, function(i,obj){
+			if (obj.$id == mobj.$id)
+				$scope.filteredUsers.push(obj);
+				console.log(mobj.$id);
+
+		});
+		$scope.apply();
+	});*/
+
 	$scope.requests = [];
 	$scope.wantedSkills = [];
 	$scope.refreshViewRequestsReceived = function() {
 		
 		//$scope.test = "";		
 		$scope.requests = [];
+		$scope.filteredUsers = [];
+		
 		var teamID = $.trim( $scope.param.teamName );	
 				
 		$.each($scope.member, function(i,obj) {			
@@ -91,6 +111,12 @@ angular.module('teamform-team-app', ['firebase'])
                 		joined_teams_ref.child(teamID).set(getURLParameter("q"));
             	});
 			}
+			$.each($scope.users, function(i,mobj){
+				var m = mobj.$id;
+				if(m===userID) {
+           		$scope.filteredUsers.push(mobj);
+           		} 
+			});
 		});
 		
 		$scope.$apply();
