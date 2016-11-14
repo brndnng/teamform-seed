@@ -74,26 +74,28 @@
                       if(userSource.joined_events) //Adding Event info
                       {
                         var keys = Object.keys(userSource.joined_events);
-                        for(var i=0;i<keys.length;i++)
+                        for(var i=0;i<keys.length;i++){
                           if(Object.values(userSource.joined_events)[i])
                             if(joinevent.indexOf(keys[i]) == -1) //He is not in event before
                             {
                               joinevent.push(keys[i]);
                               isEventAdmin.push(false);
                             }
+                        }
                       }
 
                       if(userSource.joined_teams) //Adding Teammember info
                       {
                         var keys = Object.keys(userSource.joined_teams);
                         var values = Object.values(userSource.joined_teams);
-                        for(var i=0;i<keys.length;i++)
+                        for(var i=0;i<keys.length;i++){
                           if(jointeam.indexOf(keys[i]) == -1)
                           {
                             jointeam.push(keys[i]);
                             isTeamLeader.push(false);
                             fromEvent.push(values[i]);
                           }
+                        }
                       }
 
                       //Print out the info
@@ -115,7 +117,7 @@
                         document.getElementById('showInfo').innerHTML += "<br>";
                       }
 
-                      break;
+                      //break;
                   }
                 });
               });
@@ -154,7 +156,7 @@
         });
         document.getElementById('sign-out').addEventListener('click', function() {
            firebase.auth().signOut();
-  });
+        });
       };
 
       window.addEventListener('load', function() {
