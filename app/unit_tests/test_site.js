@@ -55,31 +55,17 @@ describe('Test admin.js', function() {
 		$firebaseObject = _$firebaseObject_;
 		$scope = _$rootScope_.$new();
 	}));
-	/*beforeEach(function(){
-		module('teamform-admin-app', ['firebase']);
-			inject(function(_$rootScope_, _$controller_, _$firebaseObject_,_$firebaseArray_){
-			myscope = _$rootScope_.$new();
-			$firebaseObject = _$firebaseObject_;
-			$firebaseArray = _$firebaseArray_;
-			$controller = _$controller_;
-			
-		});
-	});*/
-	//initalizeFirebase();
-	  //spyOn($scope.param.$loaded).andCallThrough();
+/*
 	  describe('change min size Coverage Test', function() {
 		  it('change min size to 3', function() {
 			var $scope = {};		
 			var controller = $controller('AdminCtrl', {$scope:$scope});
-			//$scope.param = {};
-			//$scope.UIDparam = {};
 			var refPath, ref, eventName;
 			eventName = getURLParameter("test");
 			refPath = eventName + "/admin/param";	
 			ref = firebase.database().ref(refPath);
 			$scope.param = $firebaseObject(ref);
 
-			//$scope.param.$loaded().then
 			$scope.changeMinTeamSize(5);
 			var minTeamSize = $scope.param.minTeamSize;
 			expect(minTeamSize).toBe(5);
@@ -87,28 +73,55 @@ describe('Test admin.js', function() {
 	  });
 	  describe('change min size Coverage Test', function() {
 		  it('change max size to 10', function() {
-			//var $scope = {};
-			//var controller = $controller('AdminCtrl',{$scope:$scope});
-			//$scope.param = {};
-			//$scope.UIDparam = {};
 			var refPath, ref, eventName;
 			eventName = "test";
 			refPath = eventName + "/admin/param";	
 			ref = firebase.database().ref(refPath);
 			$scope.param = $firebaseObject(ref);
-			
-			//$scope.param.$loaded().then
 			$scope.changeMaxTeamSize(9);
 			expect($scope.param.maxTeamSize).toBe(9);
 		  });
 	  });
+*/	  
+	  describe('create and remove firebase object', function() {
+		  it('should work on a query', function(done) {
+		  var ref = stubRef();
+		  ref.set({foo: 'bar'});
+		  var query = ref.limitToLast(3); 
+		  var obj = $firebaseObject(query);  // create a firebase object
+
+		  obj.$loaded().then(function () {  // the callback function
+			expect(obj.foo).toBe('bar');  // we only test the value when the firebase object is ready
+		  }).then(function () {
+			return obj.$remove();
+		  }).then(function () {
+			expect(obj.$value).toBe(null);
+			done();
+		  });
+		});
+	  });
 	  
+	describe('change min size Coverage Test', function() {
+		  it('should change min size to 3', function(done) {
+		  var ref = stubRef();
+//		  ref.set({param.mixTeamSize: 1});
+		  var query = ref.limitToLast(3); 
+		  var obj = $firebaseObject(query);  // create a firebase object
+
+		  obj.$loaded().then(function () {  // the callback function
+		    obj.changeMinTeamSize(9)
+			expect(obj.param.maxTeamSize).toBe('9');  // we only test the value when the firebase object is ready
+		  }).then(function () {
+			return obj.$remove();
+		  });
+		});
+	});
 	
 }); 
 
    
    
-
+/*
 describe('Test team.js', function() {
 
 	var $controller, $scope;
@@ -129,7 +142,7 @@ describe('Test team.js', function() {
 			$controller = _$controller_('TeamCtrl', {$scope:$scope, $firebaseObject:$firebaseObject, $firebaseArray:$firebaseArray});
 			
 		});
-	});*/
+	});
 	//initalizeFirebase();
 
 	describe('retrieveOnceFirebase Coverage Test', function() {
@@ -150,3 +163,4 @@ describe('Test team.js', function() {
 	  
 	
 }); 
+*/
