@@ -71,7 +71,7 @@
             document.getElementById('sign-in-status').textContent = 'Signed out';
             document.getElementById('account-details').textContent = '';
             document.getElementById('user-info').style.display = 'none';
-            document.getElementById('showInfo').style.display = 'none';
+            document.getElementById('showInfo').style.display = 'block';
 
             //testing
               var query = firebase.database().ref("users/").orderByKey();
@@ -80,14 +80,18 @@
                   snapshot.forEach(function(childSnapshot) {
                     // childData will be the actual contents of the child
                     var userSource = childSnapshot.val();
+
+                    var joinevent=[], isEventAdmin=[]; //variable for event
+                    var jointeam=[],isTeamLeader=[],fromEvent=[]; //variable for team
                     if(userSource.events_admin)
                     {
                       var keys = Object.keys(userSource.events_admin);
-                      document.getElementById('showInfo').innerHTML += "Event admin";
+                      //document.getElementById('showInfo').innerHTML += "<h3>Event admin:</h3>";
                       for(var i=0;i<keys.length;i++)
                         if(Object.values(userSource.events_admin)[i])
                           document.getElementById('showInfo').innerHTML += keys[i] + "<br>";
                     }
+
                     console.log(userSource);
                 });
               });
