@@ -22,6 +22,7 @@ angular.module('teamform-team-app', ['firebase'])
 	
 
 	var refPath = "";
+
 	var eventName = getURLParameter("q");	
 	
 	// TODO: implementation of MemberCtrl	
@@ -29,7 +30,7 @@ angular.module('teamform-team-app', ['firebase'])
 		"teamName" : '',
 		"currentTeamSize" : 0,
 		"teamMembers" : [],
-		"teamLeader" : ''
+		"teamLeader" : '',
 	};
 		
 	
@@ -63,6 +64,7 @@ angular.module('teamform-team-app', ['firebase'])
 	
 	
 	$scope.requests = [];
+	$scope.wantedSkills = [];
 	$scope.refreshViewRequestsReceived = function() {
 		
 		//$scope.test = "";		
@@ -120,7 +122,8 @@ angular.module('teamform-team-app', ['firebase'])
 			var newData = {				
 				'size': $scope.param.currentTeamSize,
 				'teamMembers': $scope.param.teamMembers,
-				'teamLeader': current_uid
+				'teamLeader': current_uid,
+				'wantedSkills': $scope.param.wantedSkills
 			};		
 			
 			var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
@@ -147,7 +150,18 @@ angular.module('teamform-team-app', ['firebase'])
 				
 				
 			});
-			
+			// for each wanted skills
+			$.each($scope.param.wantedSkills, function(i,obj){
+				
+				
+				//$scope.test += obj;
+				var rec = $scope.wantedSkills.$getRecord(obj);
+				rec.selection = [];
+				$scope.wantedSkills.$save(rec);
+				
+				
+				
+			});
 
 			
 			ref.set(newData, function(){			
@@ -190,7 +204,9 @@ angular.module('teamform-team-app', ['firebase'])
 				$scope.param.teamMembers = data.child("teamMembers").val();
 				
 			}
-			
+			if ( data.child("wantedSkills").val() != null) {
+				$scope.wantedSkills = $firebaseArray(firebase.database().ref(refPath+"/wantedSkills"));
+			}
 			$scope.$apply(); // force to refresh
 		});
 
@@ -248,8 +264,61 @@ angular.module('teamform-team-app', ['firebase'])
 		}
 		
 	}
+	$scope.addSkill = function(){
+        // Get the user's input
+        var newSkill = $('#newSkill').val();
+        // Set the database's path
+        var teamID = $.trim( $scope.param.teamName );		
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/team/" + teamID + "/wantedSkills";
+        //refPath = "users/" + getURLParameter("q") + "/skills";
+        // Link to the database
+        var skills_ref = firebase.database().ref(refPath);
+        skills_ref.once("value").then(function(snapshot){
+            // Check the existence of newSkill
+            var hasSkill = snapshot.hasChild(newSkill);
+            // If it does not exist, then add newSkill
+            if(!hasSkill){
+                skills_ref.child(newSkill).set(newSkill);
+            }
+            else{
+                var repeatedNotice = "\"" + newSkill + "\" already exists.";
+                window.alert(repeatedNotice);
+            }
+        });
+
+        // Clear input box after adding
+        $('#newSkill').val("");
+        $scope.wantedSkills = $firebaseArray(firebase.database().ref(refPath));
+    };
 	
-	
+	$scope.removeSkill = function(rmSkill){
+		var teamID = $.trim( $scope.param.teamName );		
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/team/" + teamID + "/wantedSkills";
+        //refPath = "users/" + getURLParameter("q") + "/skills";
+        var skills_ref = firebase.database().ref(refPath);
+
+        /*var index = $scope.param.wantedSkills.indexOf(rmSkill);
+        if ( index > -1 ) {
+			$scope.param.wantedSkills.splice(index, 1); // remove that item
+			
+			$scope.saveFunc();
+		};*/
+        skills_ref.once("value").then(function(snapshot){
+
+            // Check whether it is the last item in skills[]
+            /*if($scope.wantedSkills.length == 1){
+                refPath = "users/" + getURLParameter("q");
+                skills_ref = firebase.database().ref(refPath);
+                skills_ref.child("skills").set("(placeholder)");
+            }*/
+
+            // Remove selected item
+            skills_ref.child(rmSkill.$id).remove();
+
+        });
+    };
 	
 	
 	
