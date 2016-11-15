@@ -56,7 +56,7 @@ angular.module('teamform-profile-app', ['firebase'])
             var hasInterest = snapshot.hasChild(newInterest);
             // If it does not exist, then add newInterest
             if(!hasInterest){
-                interests_ref.child(newInterest).set(true);
+                interests_ref.child(newInterest).set(newInterest);
             }
             else{
                 var repeatedNotice = "\"" + newInterest + "\" already exists.";
@@ -75,11 +75,11 @@ angular.module('teamform-profile-app', ['firebase'])
         interests_ref.once("value").then(function(snapshot){
 
             // Check whether it is the last item in interests[]
-            if($scope.interests.length == 1){
+            /*if($scope.interests.length == 1){
                 refPath = "users/" + getURLParameter("q");
                 interests_ref = firebase.database().ref(refPath);
                 interests_ref.child("interests").set("(placeholder)");
-            }
+            }*/
 
             // Remove selected item
             interests_ref.child(rmInterest.$id).remove();
@@ -100,7 +100,7 @@ angular.module('teamform-profile-app', ['firebase'])
             var hasSkill = snapshot.hasChild(newSkill);
             // If it does not exist, then add newSkill
             if(!hasSkill){
-                skills_ref.child(newSkill).set(true);
+                skills_ref.child(newSkill).set(newSkill);
             }
             else{
                 var repeatedNotice = "\"" + newSkill + "\" already exists.";
@@ -119,11 +119,11 @@ angular.module('teamform-profile-app', ['firebase'])
         skills_ref.once("value").then(function(snapshot){
 
             // Check whether it is the last item in skills[]
-            if($scope.skills.length == 1){
+            /*if($scope.skills.length == 1){
                 refPath = "users/" + getURLParameter("q");
                 skills_ref = firebase.database().ref(refPath);
                 skills_ref.child("skills").set("(placeholder)");
-            }
+            }*/
 
             // Remove selected item
             skills_ref.child(rmSkill.$id).remove();

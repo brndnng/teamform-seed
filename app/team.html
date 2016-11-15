@@ -73,11 +73,12 @@
 							<button type="button" class="btn btn-primary" ng-click="loadFunc();" >Load</button>
 						
 						
-							<button type="button" class="btn btn-primary" ng-click="changeFunc();" >Modify Team Size</button>
+							<button id ="modifyTeamSize" type="button" class="btn btn-primary" ng-click="changeFunc();" >Modify Team Size</button>
 						
 					</div>
+					<br>
 					<div id="skills">
-					<td class="control-label">Wanted Skills</td>
+					<label class="control-label">Wanted Skills</label>
                         <td>
                           <ul class="list-group">
                             <li class="list-group-item"  ng-repeat="skill_obj in wantedSkills" text-transform="capitalize">
@@ -126,6 +127,7 @@
 						<button type="button" class="btn" ng-click="removeMember(member);">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {{member}}
 						</button>
+						<br>
 					 </div>
 					 
                   </div>
@@ -144,7 +146,49 @@
                   </div>
 				</div>
 				  
-				  
+				<!-- Holding Meeting 
+ 				<div class="row" id="meeting">
+ 					<div class="col-sm-12">
+ 						<div class="page-header">
+ 				  			<h1>Holding your team's first meeting!</h1>
+ 						</div>
+ 						<div class="row">
+ 							<form name="form" class="css-form col-md-4" novalidate>
+ 								<div class="form-group">
+ 									<label>Date: <span class="required" ng-show="form.holddate.$error.required">*</span></label>
+ 									<input type="datetime-local" name="holddate" ng-model="meetinginput.holddate" required>
+ 								</div>
+ 
+ 								<div class="form-group">
+ 									<label>Description:</label>
+ 									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Question content..."></textarea>
+ 									<br><br>
+ 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="(!input.desc ||!input.holddate) && {{isTeamLeader}}">
+ 								</div>
+ 							
+ 							</form>
+ 
+ 						<div class="css-form col-md-8" id="firstMeetingShow">
+ 						<h1>Your First Meeting:</h1>
+ 						<div class="panel panel-success">
+ 							<div class="panel-heading"><span class="label label-default"><span class="glyphicon glyphicon-blackboard" align="center"></span></span>  {{showDate(meeting_show.holddate)}} {{showTime(meeting_show.holddate)}}
+ 							</div>
+ 							<div class="panel-body">{{meeting_show.desc}}</div>			
+ 							<div class="panel-footer">
+ 								<button class="btn btn-primary" type="button" ng-click="addjoins()">
+ 									<span class="glyphicon glyphicon-ok"></span> Join!
+ 									<span class="badge"> {{meeting_show.joins}}</span> 
+ 								</button>
+ 							 </div>
+ 							 </div>
+ 						</div>
+ 
+ 						</div>
+ 					</div>
+ 
+ 					</div>
+ 				</div>
+ 				< End of Meeting Section -->  
 
                   				  
 					
@@ -172,26 +216,26 @@
 						</li>
 						
 					</ul>			
-			
-			</div>
-
-			<div class="col-md-4 col-xs-4 text-left">
-			
-					
-			 
 					<h3>All event members:</h3>
-					
-					<ul ng-repeat="m in filteredUsers">
-						<li>
-						
+
+					<ul class="list-group" ng-repeat="m in filteredUsers">
+						<li class="list-group-item">
+							
 							User ID: {{m.$id}}  <br>
 							Name: {{m.name}} <br>
-							Skills: {{m.skills |json}}
+							Skills:
+							<div class="btn-group" ng-repeat="skill in m.skills track by $index">
+								<button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button>
+							</div> <div style="line-height:100%;">
+    								<br>
+							</div> 
+							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
 						</li>
 						
-					</ul>			
-			
+					</ul>
 			</div>
+
+
          </div>
 
 

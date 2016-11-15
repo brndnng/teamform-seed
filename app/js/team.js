@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	$('#team_page_controller').hide();
+	$('#modifyTeamSize').hide();
 	$('#skills').hide();
 	$('#text_event_name').text("Error: Invalid event name ");
 	var eventName = getURLParameter("q");
@@ -82,6 +83,94 @@ angular.module('teamform-team-app', ['firebase'])
 		$scope.apply();
 	});*/
 
+	//Meeting()
+	/*
+		var haveTeamInThisEvent = false;
+		var userID=document.getElementById('uid').textContent;
+		var meeting_teamsPath = "users/"	+ userID +"/joined_teams";
+		var meeting_teams_ref = firebase.database().ref(meeting_teamsPath);
+	
+		var meeting_teams_array = $firebaseArray(meeting_teams_ref);
+		console.log(meeting_teams_array);
+		var teamKeys =  Object.keys(meeting_teams_array);
+		var teamvalues = Object.values(meeting_teams_array);
+		var eventIndex = teamvalues.indexOf(eventName);
+		var meeting_ref = firebase.database().ref("meeting");
+		$scope.meeting_array = $firebaseArray(meeting_ref);
+		$scope.meeting_show = {
+			event: "",
+			team: "",
+			desc: "",
+			holddate: "",
+			joins: 0
+		};
+		if(eventIndex!=-1)
+		haveTeamInThisEvent = true;
+		if(haveTeamInThisEvent)
+		{
+			document.getElementById('meeting').style.display = 'block';
+			$scope.isTeamLeader;
+			if($scope.team[$scope.team.indexOf(teamKeys[eventIndex])].teamLeader == getUID())
+				$scope.isTeamLeader=true;
+			else
+				$scope.isTeamLeader=false;
+			
+			var meeting_index;
+			//check first meeting is held before or not
+			for(meeting_index=0;meeting_index<$scope.meeting_array.length;meeting_index++)
+				if($scope.meeting_array[meeting_index].event==eventName)
+					{
+						$scope.meeting_show=Object.assign({},$scope.meeting_array[meeting_index]);
+						break;
+					}
+			if(meeting_index == $scope.meeting_array.length)
+				document.getElementById('firstMeetingShow').style.display = 'none';
+			else
+				document.getElementById('firstMeetingShow').style.display = 'block';
+			$scope.meetinginput = {
+				event: "",
+				team: "",
+				desc: "",
+				holddate: "",
+				joins: 0
+			};
+	
+		}
+		else
+			document.getElementById('meeting').style.display = 'none';
+	
+		$scope.addMeeting = function() {
+				
+				// update the date
+				if ($scope.meetinginput.desc != "" && $scope.meetinginput.holddate !="" && $scope.isTeamLeader) {
+					$scope.meetinginput.holddate = $scope.meetinginput.holddate.toString();
+					$scope.meetinginput.joins = 0;
+					// add an input question
+					$scope.meeting_array.$add($scope.meetinginput);
+					$scope.meeting_show=Object.assign({},$scope.meetinginput);
+					document.getElementById('firstMeetingShow').style.display = 'block';
+				}
+			}
+
+		$scope.addjoins = function() {
+			$scope.meeting_show.joins ++;
+			for(var i=0;i<$scope.meeting_array.length;i++)
+				if($scope.meeting_show.event==$scope.meeting_array[i].event&&$scope.meeting_show.team==$scope.meeting_array[i].team)
+					$scope.meeting_array[i].joins++;
+			$scope.meeting_array.$save();
+		}
+	
+		$scope.showDate = function(v1) {
+			var d1 = new Date(v1);
+			return d1.toDateString();
+			}
+	
+		$scope.showTime = function(v1) {
+				var d1 = new Date(v1);
+				return d1.toLocaleTimeString();
+			}
+		//End of Meeting()
+	*/
 	$scope.requests = [];
 	$scope.wantedSkills = [];
 	$scope.refreshViewRequestsReceived = function() {
@@ -140,20 +229,29 @@ angular.module('teamform-team-app', ['firebase'])
 	}
 
 	$scope.saveFunc = function() {
-		
-		
+
 		var teamID = $.trim( $scope.param.teamName );
-		
-		if ( teamID !== '' ) {
+		var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
+		var ref = firebase.database().ref(refPath);
+		var exists;
+		ref.once("value").then(function(snapshot){
+			exists=snapshot.hasChild("teamLeader");
+			console.log(exists);
+		});
+		if (exists)
+			return;
+		else if ( teamID !== '') {
 			var current_uid=document.getElementById('uid').textContent;
 			var newData = {				
 				'size': $scope.param.currentTeamSize,
 				'teamMembers': $scope.param.teamMembers,
 				'teamLeader': current_uid,
+				//'wantedSkills': $scope.wantedSkills
 			};		
 			
 			var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
 			var ref = firebase.database().ref(refPath);
+		
 			var events_teamPath = "users/"	+ current_uid +"/events_teamLeader";
 			var events_team_ref = firebase.database().ref(events_teamPath);
 			
@@ -182,7 +280,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 				//$scope.test += obj;
 				var rec = $scope.wantedSkills.$getRecord(obj);
-				rec.selection = [];
+				//rec.selection = [];
 				$scope.wantedSkills.$save(rec);
 				
 				
@@ -190,14 +288,16 @@ angular.module('teamform-team-app', ['firebase'])
 			});*/
 
 			
-			ref.set(newData, function(){			
+			//ref.set(newData, function(){			
 
 				// console.log("Success..");
 				
 				// Finally, go back to the front-end
 				// window.location.href= "index.html";
-			});
-			
+			//});
+			ref.child("size").set($scope.param.currentTeamSize);
+			ref.child("teamMembers").set($scope.param.teamMembers);
+			ref.child("teamLeader").set(current_uid);
 			
 			
 		}
@@ -207,6 +307,7 @@ angular.module('teamform-team-app', ['firebase'])
 	
 	$scope.loadFunc = function() {
 		$('#skills').show();
+		$('#modifyTeamSize').show();
 		var teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
@@ -275,7 +376,8 @@ angular.module('teamform-team-app', ['firebase'])
 				
 			// Not exists, and the current number of team member is less than the preferred team size
 			$scope.param.teamMembers.push(r);
-			
+			var index = $scope.requests.indexOf(r);
+			$scope.requests.splice(index, 1); // remove that item
 			$scope.saveFunc();
 		}
 	}
@@ -286,6 +388,16 @@ angular.module('teamform-team-app', ['firebase'])
 		if ( index > -1 ) {
 			$scope.param.teamMembers.splice(index, 1); // remove that item
 			
+			var teamID = $.trim( $scope.param.teamName );	
+			var joined_teamPath = "users/"	+ member +"/joined_teams/"+teamID;
+			var joined_team_ref = firebase.database().ref(joined_teamPath);
+			
+			var eventName = getURLParameter("q");
+			joined_team_ref.once("value").then(function(snapshot){
+				
+				if (snapshot.val() == eventName)
+                	joined_team_ref.remove();
+            	});
 			$scope.saveFunc();
 		}
 		
@@ -346,6 +458,33 @@ angular.module('teamform-team-app', ['firebase'])
         });
     };
 	
+	$scope.inviteToTeam = function(user){
+		var teamID = $.trim( $scope.param.teamName );	
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/member/" + user + "/invites";
+		var invites_ref = firebase.database().ref(refPath);
+		//check if user is in team
+		if ($scope.param.teamMembers.indexOf(user) >= 0){
+			var repeatedNotice = "User already in team.";
+			window.alert(repeatedNotice);
+			return;
+		}
+
+		invites_ref.once("value").then(function(snapshot){
+            // Check the existence of newSkill
+            var hasInvite = snapshot.hasChild(teamID);
+            // If it does not exist, then add newSkill
+            if(!hasInvite){
+                invites_ref.child(teamID).set(teamID);
+                invite = "success"
+            }
+            else{
+                var repeatedNotice = "User already invited.";
+                invite = "success";
+                window.alert(repeatedNotice);
+            }
+        });
+	};
 	
 	
 	
