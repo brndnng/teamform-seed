@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 	$('#team_page_controller').hide();
+	$('#modifyTeamSize').hide();
 	$('#skills').hide();
 	$('#text_event_name').text("Error: Invalid event name ");
 	var eventName = getURLParameter("q");
@@ -140,20 +141,29 @@ angular.module('teamform-team-app', ['firebase'])
 	}
 
 	$scope.saveFunc = function() {
-		
-		
+
 		var teamID = $.trim( $scope.param.teamName );
-		
-		if ( teamID !== '' ) {
+		var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
+		var ref = firebase.database().ref(refPath);
+		var exists;
+		ref.once("value").then(function(snapshot){
+			exists=snapshot.hasChild("teamLeader");
+			console.log(exists);
+		});
+		if (exists)
+			return;
+		else if ( teamID !== '') {
 			var current_uid=document.getElementById('uid').textContent;
 			var newData = {				
 				'size': $scope.param.currentTeamSize,
 				'teamMembers': $scope.param.teamMembers,
 				'teamLeader': current_uid,
+				//'wantedSkills': $scope.wantedSkills
 			};		
 			
 			var refPath = "events/" + getURLParameter("q") + "/team/" + teamID;	
 			var ref = firebase.database().ref(refPath);
+		
 			var events_teamPath = "users/"	+ current_uid +"/events_teamLeader";
 			var events_team_ref = firebase.database().ref(events_teamPath);
 			
@@ -182,7 +192,7 @@ angular.module('teamform-team-app', ['firebase'])
 				
 				//$scope.test += obj;
 				var rec = $scope.wantedSkills.$getRecord(obj);
-				rec.selection = [];
+				//rec.selection = [];
 				$scope.wantedSkills.$save(rec);
 				
 				
@@ -190,14 +200,16 @@ angular.module('teamform-team-app', ['firebase'])
 			});*/
 
 			
-			ref.set(newData, function(){			
+			//ref.set(newData, function(){			
 
 				// console.log("Success..");
 				
 				// Finally, go back to the front-end
 				// window.location.href= "index.html";
-			});
-			
+			//});
+			ref.child("size").set($scope.param.currentTeamSize);
+			ref.child("teamMembers").set($scope.param.teamMembers);
+			ref.child("teamLeader").set(current_uid);
 			
 			
 		}
@@ -207,6 +219,7 @@ angular.module('teamform-team-app', ['firebase'])
 	
 	$scope.loadFunc = function() {
 		$('#skills').show();
+		$('#modifyTeamSize').show();
 		var teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
@@ -275,7 +288,8 @@ angular.module('teamform-team-app', ['firebase'])
 				
 			// Not exists, and the current number of team member is less than the preferred team size
 			$scope.param.teamMembers.push(r);
-			
+			var index = $scope.requests.indexOf(r);
+			$scope.requests.splice(index, 1); // remove that item
 			$scope.saveFunc();
 		}
 	}
@@ -286,6 +300,16 @@ angular.module('teamform-team-app', ['firebase'])
 		if ( index > -1 ) {
 			$scope.param.teamMembers.splice(index, 1); // remove that item
 			
+			var teamID = $.trim( $scope.param.teamName );	
+			var joined_teamPath = "users/"	+ member +"/joined_teams/"+teamID;
+			var joined_team_ref = firebase.database().ref(joined_teamPath);
+			
+			var eventName = getURLParameter("q");
+			joined_team_ref.once("value").then(function(snapshot){
+				
+				if (snapshot.val() == eventName)
+                	joined_team_ref.remove();
+            	});
 			$scope.saveFunc();
 		}
 		
@@ -346,6 +370,33 @@ angular.module('teamform-team-app', ['firebase'])
         });
     };
 	
+	$scope.inviteToTeam = function(user){
+		var teamID = $.trim( $scope.param.teamName );	
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/member/" + user + "/invites";
+		var invites_ref = firebase.database().ref(refPath);
+		//check if user is in team
+		if ($scope.param.teamMembers.indexOf(user) >= 0){
+			var repeatedNotice = "User already in team.";
+			window.alert(repeatedNotice);
+			return;
+		}
+
+		invites_ref.once("value").then(function(snapshot){
+            // Check the existence of newSkill
+            var hasInvite = snapshot.hasChild(teamID);
+            // If it does not exist, then add newSkill
+            if(!hasInvite){
+                invites_ref.child(teamID).set(teamID);
+                invite = "success"
+            }
+            else{
+                var repeatedNotice = "User already invited.";
+                invite = "success";
+                window.alert(repeatedNotice);
+            }
+        });
+	};
 	
 	
 	

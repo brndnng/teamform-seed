@@ -73,11 +73,12 @@
 							<button type="button" class="btn btn-primary" ng-click="loadFunc();" >Load</button>
 						
 						
-							<button type="button" class="btn btn-primary" ng-click="changeFunc();" >Modify Team Size</button>
+							<button id ="modifyTeamSize" type="button" class="btn btn-primary" ng-click="changeFunc();" >Modify Team Size</button>
 						
 					</div>
+					<br>
 					<div id="skills">
-					<td class="control-label">Wanted Skills</td>
+					<label class="control-label">Wanted Skills</label>
                         <td>
                           <ul class="list-group">
                             <li class="list-group-item"  ng-repeat="skill_obj in wantedSkills" text-transform="capitalize">
@@ -126,6 +127,7 @@
 						<button type="button" class="btn" ng-click="removeMember(member);">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {{member}}
 						</button>
+						<br>
 					 </div>
 					 
                   </div>
@@ -172,26 +174,26 @@
 						</li>
 						
 					</ul>			
-			
-			</div>
-
-			<div class="col-md-4 col-xs-4 text-left">
-			
-					
-			 
 					<h3>All event members:</h3>
-					
-					<ul ng-repeat="m in filteredUsers">
-						<li>
-						
+
+					<ul class="list-group" ng-repeat="m in filteredUsers">
+						<li class="list-group-item">
+							
 							User ID: {{m.$id}}  <br>
 							Name: {{m.name}} <br>
-							Skills: {{m.skills |json}}
+							Skills:
+							<div class="btn-group" ng-repeat="skill in m.skills track by $index">
+								<button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button>
+							</div> <div style="line-height:100%;">
+    								<br>
+							</div> 
+							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
 						</li>
 						
-					</ul>			
-			
+					</ul>
 			</div>
+
+
          </div>
 
 

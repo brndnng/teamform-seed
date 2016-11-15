@@ -24,7 +24,11 @@ angular.module('teamform-member-app', ['firebase'])
 		$scope.userID = user.uid;
 		$scope.userName = user.displayName;	
 		//$scope.teams = {};
-
+		var invited_refPath = "events/" + getURLParameter("q") + "/member/" + $scope.userID + "/invites";
+		var invited_ref = firebase.database().ref(invited_refPath);
+		$scope.invitedTeams = $firebaseArray(invited_ref);
+		console.log(invited_refPath);
+		//console.log($scope.invitedTeams);
 		}
 		else{
 			$scope.userID = "";
@@ -35,10 +39,10 @@ angular.module('teamform-member-app', ['firebase'])
 		}
 	})	
 
-	$scope.userID = "";
-	$scope.userName = "";	
+	//$scope.userID = "";
+	//$scope.userName = "";	
 	$scope.teams = {};
-
+	//$scope.invitedTeams = {};
 		//if (!checkLoginstate()){
 		//window.alert("Please login");
 		//window.location.href= "index.html";
@@ -111,9 +115,10 @@ angular.module('teamform-member-app', ['firebase'])
 	}
 	
 	$scope.refreshTeams = function() {
-
+		var userID = $.trim( $scope.userID );
 		var refPath = "events/" + getURLParameter("q") + "/team";	
 		var ref = firebase.database().ref(refPath);
+
 		
 		// Link and sync a firebase object
 		$scope.selection = [];		
