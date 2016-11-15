@@ -82,6 +82,93 @@ angular.module('teamform-team-app', ['firebase'])
 		$scope.apply();
 	});*/
 
+	//Meeting()
+	var haveTeamInThisEvent = false;
+	var meeting_teamsPath = "users/"	+ userID +"/joined_teams";
+	var meeting_teams_ref = firebase.database().ref(meeting_teamsPath);
+
+	var meeting_teams_array = $firebaseArray(meeting_teams_ref);
+	console.log(meeting_teams_array);
+	var teamKeys =  Object.keys(meeting_teams_array);
+	var teamvalues = Object.values(meeting_teams_array);
+	var eventIndex = teamvalues.indexOf(eventName);
+	var meeting_ref = firebase.database().ref("meeting");
+	$scope.meeting_array = $firebaseArray(meeting_ref);
+	$scope.meeting_show = {
+		event: "",
+		team: "",
+		desc: "",
+		holddate: "",
+		joins: 0
+	};
+	if(eventIndex!=-1)
+	haveTeamInThisEvent = true;
+	if(haveTeamInThisEvent)
+	{
+		document.getElementById('meeting').style.display = 'block';
+		$scope.isTeamLeader;
+		if($scope.team[$scope.team.indexOf(teamKeys[eventIndex])].teamLeader == getUID())
+			$scope.isTeamLeader=true;
+		else
+			$scope.isTeamLeader=false;
+		
+		var meeting_index;
+		//check first meeting is held before or not
+		for(meeting_index=0;meeting_index<$scope.meeting_array.length;meeting_index++)
+			if($scope.meeting_array[meeting_index].event==eventName)
+				{
+					$scope.meeting_show=Object.assign({},$scope.meeting_array[meeting_index]);
+					break;
+				}
+		if(meeting_index == $scope.meeting_array.length)
+			document.getElementById('firstMeetingShow').style.display = 'none';
+		else
+			document.getElementById('firstMeetingShow').style.display = 'block';
+		$scope.meetinginput = {
+			event: "",
+			team: "",
+			desc: "",
+			holddate: "",
+			joins: 0
+		};
+
+	}
+	else
+		document.getElementById('meeting').style.display = 'none';
+
+	$scope.addMeeting = function() {
+			
+			// update the date
+			if ($scope.meetinginput.desc != "" && $scope.meetinginput.holddate !="" && $scope.isTeamLeader) {
+				$scope.meetinginput.holddate = $scope.meetinginput.holddate.toString();
+				$scope.meetinginput.joins = 0;
+				// add an input question
+				$scope.meeting_array.$add($scope.meetinginput);
+				$scope.meeting_show=Object.assign({},$scope.meetinginput);
+				document.getElementById('firstMeetingShow').style.display = 'block';
+			}
+		}
+
+	$scope.addjoins = function() {
+		$scope.meeting_show.joins ++;
+		for(var i=0;i<$scope.meeting_array.length;i++)
+			if($scope.meeting_show.event==$scope.meeting_array[i].event&&$scope.meeting_show.team==$scope.meeting_array[i].team)
+				$scope.meeting_array[i].joins++;
+		$scope.meeting_array.$save();
+	}
+
+	$scope.showDate = function(v1) {
+		var d1 = new Date(v1);
+		return d1.toDateString();
+		}
+
+	$scope.showTime = function(v1) {
+			var d1 = new Date(v1);
+			return d1.toLocaleTimeString();
+		}
+	//End of Meeting()
+
+
 	$scope.requests = [];
 	$scope.wantedSkills = [];
 	$scope.refreshViewRequestsReceived = function() {
@@ -121,7 +208,7 @@ angular.module('teamform-team-app', ['firebase'])
 		});
 		
 		$scope.$apply();
-		
+
 	}
 	
 	
