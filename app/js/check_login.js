@@ -1,4 +1,4 @@
-	var initApp = function() {initalizeFirebase();
+  var initApp = function() {initalizeFirebase();
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
             // User is signed in.
@@ -100,22 +100,28 @@
 
                       //Print out the info
                       document.getElementById('showInfo').innerHTML += "<h3>Event :</h3>";
-                      for(var i=0;i<joinevent.length;i++)
-                      {
-                        document.getElementById('showInfo').innerHTML += "<b>" + joinevent[i] + "</b> ";
-                        if(isEventAdmin[i])
-                          document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Admin</span>";
-                        document.getElementById('showInfo').innerHTML += "<br>";
-                      }
+                      if(joinevent.length==0)
+                        document.getElementById('showInfo').innerHTML += "(none)";
+                      else
+                        for(var i=0;i<joinevent.length;i++)
+                        {
+                          document.getElementById('showInfo').innerHTML += "<b>" + joinevent[i] + "</b> ";
+                          if(isEventAdmin[i])
+                            document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Admin</span>";
+                          document.getElementById('showInfo').innerHTML += "<br>";
+                        }
 
                       document.getElementById('showInfo').innerHTML += "<h3>Team :</h3>";
-                      for(var i=0;i<jointeam.length;i++)
-                      {
-                        document.getElementById('showInfo').innerHTML += "<b>" + jointeam[i] + "</b> (from " + fromEvent[i] + ") ";
-                        if(isTeamLeader[i])
-                          document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Leader</span>";
-                        document.getElementById('showInfo').innerHTML += "<br>";
-                      }
+                      if(jointeam.length==0)
+                        document.getElementById('showInfo'.innerHTML) += "(none)";
+                      else
+                        for(var i=0;i<jointeam.length;i++)
+                        {
+                          document.getElementById('showInfo').innerHTML += "<b>" + jointeam[i] + "</b> (from " + fromEvent[i] + ") ";
+                          if(isTeamLeader[i])
+                            document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Leader</span>";
+                          document.getElementById('showInfo').innerHTML += "<br>";
+                        }
 
                       //break;
                   }
@@ -127,9 +133,9 @@
                 document.getElementById('photo').src = user.photoURL;
                 document.getElementById('photo').style.display = 'block';
               } else {
-				photoURL = 'placeholder.svg';
+        photoURL = 'placeholder.svg';
                 document.getElementById('photo').src = photoURL;
-				document.getElementById('photo').style.display = 'block';
+        document.getElementById('photo').style.display = 'block';
               }
               document.getElementById('account-details').textContent = JSON.stringify({
                 displayName: displayName,
@@ -149,6 +155,7 @@
             document.getElementById('account-details').textContent = '';
             document.getElementById('user-info').style.display = 'none';
             document.getElementById('showInfo').style.display = 'none';
+            document.getElementById('showInfo').innerHTML = "";
 
           }
         }, function(error) {
