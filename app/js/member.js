@@ -156,11 +156,14 @@ angular.module('teamform-member-app', ['firebase'])
 		var refPath = "events/" + getURLParameter("q") + "/team/" + teamID ;
 		var ref = firebase.database().ref(refPath);
 		console.log(refPath);
+
 		var invited_refPath = "events/" + getURLParameter("q") + "/member/" + userID + "/invites";
 		console.log(invited_refPath);
 		var invited_ref = firebase.database().ref(invited_refPath);
 		$scope.invitedTeams = $firebaseArray(invited_ref);
 
+		var joined_teamsPath = "users/"	+ userID +"/joined_teams";
+		var joined_teams_ref = firebase.database().ref(joined_teamsPath);
 
 		$scope.teamMembers = [];
 		
@@ -177,8 +180,8 @@ angular.module('teamform-member-app', ['firebase'])
 				$scope.teamMembers.push(userID);
 			//onsole.log($scope.teamMembers);
 			
-				var index = $scope.invitedTeams.indexOf(teamID);
-				$scope.invitedTeams.splice(index, 1);
+				//var index = $scope.invitedTeams.indexOf(teamID);
+				//$scope.invitedTeams.splice(index, 1);
 			//console.log($scope.invitedTeams);	
 			};
 			ref.child("teamMembers").set($scope.teamMembers);
@@ -187,6 +190,13 @@ angular.module('teamform-member-app', ['firebase'])
 		invited_ref.once("value").then(function(snapshot){
 			invited_ref.child(teamID).remove();
 		});
+
+		joined_teams_ref.once("value").then(function(snapshot){
+				//var teamName = teamID;
+            var hasTeam = snapshot.hasChild(teamID);
+            if (!hasTeam)
+                joined_teams_ref.child(teamID).set(getURLParameter("q"));
+        });
 		//$scope.$apply();
 	};
 	
