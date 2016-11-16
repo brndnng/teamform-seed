@@ -50,7 +50,6 @@
                       if(userSource.events_admin) //Adding Event Admin
                       {
                         var keys = Object.keys(userSource.events_admin);
-                        //document.getElementById('showInfo').innerHTML += "<h3>Event admin:</h3>";
                         for(var i=0;i<keys.length;i++)
                           if(Object.values(userSource.events_admin)[i])
                             {
@@ -105,7 +104,7 @@
                       else
                         for(var i=0;i<joinevent.length;i++)
                         {
-                          document.getElementById('showInfo').innerHTML += "<b>" + joinevent[i] + "</b> ";
+                          document.getElementById('showInfo').innerHTML += "<b><a href=\"team.html?q=" + joinevent[i] + "\">" + joinevent[i] + "</a></b> ";
                           if(isEventAdmin[i])
                             document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Admin</span>";
                           document.getElementById('showInfo').innerHTML += "<br>";
@@ -120,6 +119,8 @@
                           document.getElementById('showInfo').innerHTML += "<b>" + jointeam[i] + "</b> (from " + fromEvent[i] + ") ";
                           if(isTeamLeader[i])
                             document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Leader</span>";
+                          else
+                            document.getElementById('showInfo').innerHTML += "<span class=\"label label-info\">Member</span>";
                           document.getElementById('showInfo').innerHTML += "<br>";
                         }
 
