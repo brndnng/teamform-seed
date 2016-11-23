@@ -314,8 +314,7 @@ angular.module('teamform-team-app', ['firebase'])
 	}
 	
 	$scope.loadFunc = function() {
-		$('#skills').show();
-		$('#modifyTeamSize').show();
+		
 		var teamID;
 		//Team name from index.html
 		var teamnameFromindex = getTeamNameFromIndex();
@@ -328,25 +327,29 @@ angular.module('teamform-team-app', ['firebase'])
 		retrieveOnceFirebase(firebase, refPath, function(data) {	
 			var current_uid=document.getElementById('uid').textContent;
 			if (data.child("teamLeader").val() !=null){
-				if(data.child("teamLeader").val()!= current_uid)
+				if(data.child("teamLeader").val()== current_uid){
+					//window.alert("You don't have permission to edit this team!");
+				$('#skills').show();
+				$('#modifyTeamSize').show();
+				if ( data.child("size").val() != null ) {
+				
+					$scope.param.currentTeamSize = data.child("size").val();
+				
+					$scope.refreshViewRequestsReceived();
+					
+				} 
+		
+				if ( data.child("teamMembers").val() != null ) {
+				
+					$scope.param.teamMembers = data.child("teamMembers").val();
+				
+				}
+				if ( data.child("wantedSkills").val() != null) {
+					$scope.wantedSkills = $firebaseArray(firebase.database().ref(refPath+"/wantedSkills"));
+				}
+				}
+				else 
 					window.alert("You don't have permission to edit this team!");
-			}
-			if ( data.child("size").val() != null ) {
-				
-				$scope.param.currentTeamSize = data.child("size").val();
-				
-				$scope.refreshViewRequestsReceived();
-								
-				
-			} 
-			
-			if ( data.child("teamMembers").val() != null ) {
-				
-				$scope.param.teamMembers = data.child("teamMembers").val();
-				
-			}
-			if ( data.child("wantedSkills").val() != null) {
-				$scope.wantedSkills = $firebaseArray(firebase.database().ref(refPath+"/wantedSkills"));
 			}
 			$scope.$apply(); // force to refresh
 		});
