@@ -20,6 +20,7 @@
                   {"name":user.displayName,
                    "skills":"(placeholder)",
                    "interests":"(placeholder)",
+                   "email": user.email
                    //"joined_events": "(placeholder)",
                    //"events_admin": "(placeholder)"
 
