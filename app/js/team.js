@@ -12,6 +12,14 @@ $(document).ready(function(){
 
 });
 
+//Getting team name from index.html
+function getTeamNameFromIndex() {
+	var getTeam = localStorage.getItem('_team');
+	if(getTeam != null)
+		localStorage.removeItem('_team');
+	return getTeam;
+}
+
 angular.module('teamform-team-app', ['firebase'])
 .controller('TeamCtrl', ['$scope', '$firebaseObject', '$firebaseArray', 
     function($scope, $firebaseObject, $firebaseArray) {
@@ -308,7 +316,13 @@ angular.module('teamform-team-app', ['firebase'])
 	$scope.loadFunc = function() {
 		$('#skills').show();
 		$('#modifyTeamSize').show();
-		var teamID = $.trim( $scope.param.teamName );		
+		var teamID;
+		//Team name from index.html
+		var teamnameFromindex = getTeamNameFromIndex();
+		if(teamnameFromindex != null)
+			teamID = teamnameFromindex;
+		else
+			teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
 		retrieveOnceFirebase(firebase, refPath, function(data) {	
@@ -490,3 +504,7 @@ angular.module('teamform-team-app', ['firebase'])
 	
 		
 }]);
+
+window.onload = function() {
+  angular.element(document.getElementById('teamform-team-app')).scope().loadFunc();
+};
