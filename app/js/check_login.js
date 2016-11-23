@@ -107,7 +107,7 @@
                         {
                           document.getElementById('showInfo').innerHTML += "<b><a href=\"team.html?q=" + joinevent[i] + "\">" + joinevent[i] + "</a></b> ";
                           if(isEventAdmin[i])
-                            document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Admin</span>";
+                            document.getElementById('showInfo').innerHTML += "<b><a href=\"admin.html?q=" + joinevent[i] + "\">" + "<span class=\"label label-primary\">Admin</span></a>";
                           document.getElementById('showInfo').innerHTML += "<br>";
                         }
 
@@ -117,7 +117,7 @@
                       else
                         for(var i=0;i<jointeam.length;i++)
                         {
-                          document.getElementById('showInfo').innerHTML += "<b>" + jointeam[i] + "</b> (from " + fromEvent[i] + ") ";
+                          document.getElementById('showInfo').innerHTML += "<a href=\"javascript:passTeamName(\"" + jointeam[i] + "\",\""+ fromEvent[i] + "\");\"><b>" + jointeam[i] + "</b></a> (from " + fromEvent[i] + ") ";
                           if(isTeamLeader[i])
                             document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Leader</span>";
                           else
@@ -171,3 +171,10 @@
       window.addEventListener('load', function() {
         initApp()
       });
+
+//Passing Team Name to teampage
+function passTeamName(T,E) {
+  var url = "team.html?q=" + E;
+  window.location.href= url;
+  localStorage.setItem('_team', T);
+}
