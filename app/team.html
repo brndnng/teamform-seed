@@ -224,13 +224,17 @@
 						<li class="list-group-item">
 							
 							Team Name: {{t.$id}}  <br>
-							Preferred team size: {{t.size}} <br>
+							Preferred team size: {{t.size}}<br>
 							Current team members:
-							<li class="list-group-item" ng-repeat="member in t.teamMembers">
+							<li class="btn-group" ng-repeat="member in t.teamMembers">
 								<!--<button type="button" class="btn btn-primary btn-sm btn-space">{{member}}</button>-->
 								<div class="alert alert-info" role="alert">{{member}}</div>
-							</li> 
-    								<br>
+							</li> <br>
+							Wanted Skills:
+							<li class="btn-group" ng-repeat="skill in t.wantedSkills track by $index">
+								<div class="alert alert-info" role="alert">{{skill}}</div>
+							</li> <br>
+    						<button type="button" class="btn btn-primary" ng-click="inviteToMerge(t.$id,t.size,t.teamMembers)">Request to Merge With</button>	
 						</li>
 						
 					</ul>

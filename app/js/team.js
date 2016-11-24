@@ -488,14 +488,15 @@ angular.module('teamform-team-app', ['firebase'])
 		}
 
 		invites_ref.once("value").then(function(snapshot){
-            // Check the existence of newSkill
+            // Check if member is invited
             var hasInvite = snapshot.hasChild(teamID);
-            // If it does not exist, then add newSkill
+            // If not invited, send invite
             if(!hasInvite){
                 invites_ref.child(teamID).set(teamID);
                 invite = "success"
             }
             else{
+            	//Invited already
                 var repeatedNotice = "User already invited.";
                 invite = "success";
                 window.alert(repeatedNotice);
@@ -503,7 +504,37 @@ angular.module('teamform-team-app', ['firebase'])
         });
 	};
 	
-	
+	$scope.inviteToMerge = function(teamToMerge,teamSize,teamMembers){
+		var teamID = $.trim( $scope.param.teamName );
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/team/" + teamToMerge + "/mergeInvites";
+		var invites_ref = firebase.database().ref(refPath);
+		//console.log(teamMembers.length);
+		//console.log($scope.param.teamMembers.length);
+		//console.log($scope.param.currentTeamSize);
+		invites_ref.once("value").then(function(snapshot){
+            // Check if merge invite is sent
+            var hasInvite = snapshot.hasChild(teamID);
+            // If not invited, send invite
+            if(!hasInvite){
+            	if (teamMembers.length + $scope.param.teamMembers.length <= $scope.param.currentTeamSize){
+                	invites_ref.child(teamID).set(teamID);
+                	invite = "success";
+            	}
+            	else {
+            		var repeatedNotice = "Merged team size will exceed Prefered team size.";
+                	invite = "success";
+                	window.alert(repeatedNotice);
+                }
+            }
+            else{
+            	//Invited already
+                var repeatedNotice = "Team already invited.";
+                invite = "success";
+                window.alert(repeatedNotice);
+            }
+        });
+	};
 	
 		
 }]);
