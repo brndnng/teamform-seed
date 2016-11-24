@@ -1,3 +1,6 @@
+'use strict';
+//var MockFirebase = require('mockfirebase').MockFirebase;
+//MockFirebase.override();
 describe('Test site.js', function() {
 	
    //
@@ -9,86 +12,178 @@ describe('Test site.js', function() {
 	  	var value = getRandomIntInclusive(1, 3);
 	  	expect( value>=1 && value <= 3 ).toEqual(true);
 	  });
-
-   });
-   
-
-
-describe('teamform-admin-app', function() {
-
-<<<<<<< HEAD
-	var $controller, $scope;
-
-	beforeEach(function(){
-		module('teamform-admin-app', 'firebase');
-			inject(function(_$rootScope_, _$controller_, _$firebaseObject_,_$firebaseArray_){
-			myscope = _$rootScope_.$new();
-			$firebaseObject = _$firebaseObject_;
-			$firebaseArray = _$firebaseArray_;
-			$controller = _$controller_;
+   });  
+   /*
+	describe('getURLParameter test', function() {
+		//inject(function('$window')
+		var url = "team.html?q=test";
+		var location ="";
+		inject(function(url){
+			location = url;
+			//spyOn($location,'decodeURIComponent');
+		});
+		
+		it('return event name from url', function($window) {
+			//spyOn(firebase,'decodeURIComponent');
+			var eventName = getURLParameter("q");
+			//$window.location.href= '/team.html?q=test';
+			//console.log($window.location);
+		expect(eventName).toEqual("test");
+	  });
+	});
+	*/
+	describe('init firebase test', function() {
+		it('will initial firebase', function() {
+			//var testApp = new initApp();
+			spyOn(firebase,'initializeApp');
+			initalizeFirebase();
+			//initApp();
+			expect(firebase.initalizeApp).tohaveBeenCalled;
 		});
 	});
-=======
-	var createController, $scope;
-
-	beforeEach(inject(function($rootScope, _$controller_){
-        $scope = $rootScope.$new();
-		
-		createController = function() {
-            return $controller('teamform-admin-app', {
-                '$scope': $scope
-            });
-        };
-	}));
->>>>>>> refs/remotes/origin/master
 	
+});
+
+//require('./site');
+//require('./verify');
 
 
-	  it('change min size to 3', function() {
-<<<<<<< HEAD
-	  	var myscope = {};		
-		var controller = $controller('AdminCtrl',{$scope:myscope});
-		myscope.param = {};
+describe('Test admin.js', function() {
+	var $controller, $scope, $firebaseObject, $firebaseArray, $firebaseUtils;
+	//beforeEach(angular.mock.module('teamform-admin-app'));
+	beforeEach(function() {
+		module('firebase');
+		module('teamform-admin-app');
+	});
+	beforeEach(inject(function($rootScope) {
+    $scope = $rootScope.$new();        
+	}));
+	beforeEach(inject(function(_$controller_,_$firebaseObject_,_$firebaseArray_, _$firebaseUtils_){
+		$controller = _$controller_;
+		$firebaseObject = _$firebaseObject_;
+		$firebaseArray = _$firebaseArray_;
+		$firebaseUtils = _$firebaseUtils_;
+		//initalizeFirebase();
 
-		var refPath, ref, eventName;
-		eventName = getURLParameter("test");
-		refPath = eventName + "/admin/param";	
-		ref = firebase.database().ref(refPath);
-		myscope.param = $firebaseObject(http://comp3111-dcd88.firebaseio.com/test/admin/param);
-		
-		myscope.changeMinTeamSize(5);
-	  	expect(myscope.param.minTeamSize).toBe(5);
+	}));
+/*
+	  describe('change min size Coverage Test', function() {
+		  it('change min size to 3', function() {
+			var $scope = {};		
+			var controller = $controller('AdminCtrl', {$scope:$scope});
+			var refPath, ref, eventName;
+			eventName = getURLParameter("test");
+			refPath = eventName + "/admin/param";	
+			ref = firebase.database().ref(refPath);
+			$scope.param = $firebaseObject(ref);
+
+			$scope.changeMinTeamSize(5);
+			var minTeamSize = $scope.param.minTeamSize;
+			expect(minTeamSize).toBe(5);
+		  });
+	  });
+	  describe('change min size Coverage Test', function() {
+		  it('change max size to 10', function() {
+			var refPath, ref, eventName;
+			eventName = "test";
+			refPath = eventName + "/admin/param";	
+			ref = firebase.database().ref(refPath);
+			$scope.param = $firebaseObject(ref);
+			$scope.changeMaxTeamSize(9);
+			expect($scope.param.maxTeamSize).toBe(9);
+		  });
+	  });
+*/
+initalizeFirebase();
+	  describe('create and remove firebase object', function() {
+		it('should work on a query', function(done) {
+
+  //firebase.initializeApp(config);
+  			  		
+
+		  var ref =  stubRef();
+		  //var ref = testApp.database().ref("/unit_test").push();
+		  ref.set({foo: 'bar'});
+		  var query = ref.limitToLast(3); 
+		  var obj = $firebaseObject(query);  // create a firebase object
+
+		  obj.$loaded().then(function () {  // the callback function
+			expect(obj.foo).toBe('bar');  // we only test the value when the firebase object is ready
+		  }).then(function () {
+			return obj.$remove();
+		  }).then(function () {
+			expect(obj.$value).toBe(null);
+			done();
+		  });
+		});
 	  });
 	  
-	  it('change max size to 10', function() {
-	  	myscope = {};
-		controller = $controller('AdminCtrl',{$scope:myscope});
-		
-		myscope.param = {};
-		var refPath, ref, eventName;
-		eventName = "test";
-		refPath = eventName + "/admin/param";	
-		ref = firebase.database().ref(refPath);
-		
-		myscope.param.$loaded().then
-	  	myscope.changeMaxTeamSize(9);
-	  	expect(myscope.param.maxTeamSize).toBe(9);
-=======
-	  	$scope.changeMinTeamSize(3);
-	  	expect($scope.param.minTeamSize).toBe(3);
-	  });
-	  
-	  it('change max size to 10', function() {
-	  	$scope.changeMaxTeamSize(10);
-	  	expect($scope.param.minTeamSize).toBe(10);
->>>>>>> refs/remotes/origin/master
-	  });
-	  
-	  
-});   
+	describe('change min size Coverage Test', function() {
+		  it('should change min size to 3', function(done) {
+		  	//initalizeFirebase();
+		  var ref = stubRef();
+		  //var ref = testApp.database().ref("/unit_test").push();
+//		  ref.set({param.mixTeamSize: 1});
+		  var query = ref.limitToLast(3); 
+		  var obj = $firebaseObject(query);  // create a firebase object
+
+		  obj.$loaded().then(function (data) {  // the callback function
+		    obj.changeMinTeamSize(9)
+			expect(obj.param.maxTeamSize).toBe('9');  // we only test the value when the firebase object is ready
+		  }).then(function () {
+			return obj.$remove();
+		  });
+		});
+	});
+	
+}); 
+
    
-<<<<<<< HEAD
-});
-=======
-});
->>>>>>> refs/remotes/origin/master
+   
+/*
+describe('Test team.js', function() {
+
+	var $controller, $scope;
+
+	
+	beforeEach(module('teamform-team-app'));
+	beforeEach(inject(function(_$controller_,_$firebaseObject_){
+		$controller = _$controller_;
+		$firebaseObject = _$firebaseObject_;
+	}));
+	/*
+	beforeEach(function(){
+		module('teamform-team-app', ['firebase']);
+			angular.mock.inject(function(_$rootScope_, _$controller_, _$firebaseObject_,_$firebaseArray_,$window){
+			$scope = _$rootScope_.new();
+			$firebaseObject = _$firebaseObject_;
+			$firebaseArray = _$firebaseArray_;
+			$controller = _$controller_('TeamCtrl', {$scope:$scope, $firebaseObject:$firebaseObject, $firebaseArray:$firebaseArray});
+			
+		});
+	});
+	//initalizeFirebase();
+
+	describe('retrieveOnceFirebase Coverage Test', function() {
+		  beforeEach(module('app', function ($provide) {
+			$provide.value('$window', {
+			   location: {
+				 href: ''
+			   }
+			});
+		  }));
+		  it('should redirect to redirect page', function ($window) {
+			var refPath = "events/test/admin";
+			retrieveOnceFirebase(firebase, refPath, function(data){});
+			expect($window.location.href).toContain('/redirect.html');
+			}
+		  );
+	});
+	  
+	
+}); 
+*/
+
+function stubRef() {
+	return firebase.database().ref().push();
+  		};

@@ -30,3 +30,20 @@ $(document).ready(function(){
 
 
 });
+
+
+function openProfile(){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            var current_uid = user.uid;
+            if ( current_uid !== ''){
+                var url = "profile.html?q=" + current_uid;
+                window.location.href = url;
+            }
+        }
+        else {
+            window.alert("Please login.");
+        }
+    });
+
+}

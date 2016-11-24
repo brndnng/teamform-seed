@@ -58,8 +58,8 @@
                      </div>
 					 
 					 <div class="col-sm-4">
-					   <button type="button" class="btn btn-primary" ng-click="saveFunc();" >Add/Modify</button>
-					  <button type="button" class="btn btn-primary" ng-click="loadFunc();" >Load</button>
+					   <!--<button type="button" class="btn btn-primary" ng-click="saveFunc();" >Add/Modify</button>
+					  <button type="button" class="btn btn-primary" ng-click="loadFunc();" >Load</button>-->
 					  </div>
                   </div>
 
@@ -86,10 +86,21 @@
 						<label><input type="checkbox" value="{{team.$id}}" 
 						  ng-checked="selection.indexOf(team.$id) > -1"
 						  ng-click="toggleSelection(team.$id)">
-						{{team.$id}}</label>
+						{{team.$id}}</label><br>
+						
+						Wanted skills:
+						<li class="list-group-item" ng-repeat="skill in team.wantedSkills">
+							<button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button>
+						</li> 
+						
 					 </div>
-					  
+					  <br>
 				  </div>
+              <h3>Your team invites:</h3>
+              <div ng-repeat="t in invitedTeams">
+                  {{t.$id}}
+                  <button type="button" class="btn btn-primary" ng-click="acceptInvite(t.$id)">Accept Invite</button>
+              </div>
 				</div>
 
                
