@@ -13,12 +13,9 @@ $(document).ready(function(){
 });
 
 //Getting team name from index.html
-function getTeamNameFromIndex() {
-	var getTeam = localStorage.getItem('_team');
-	if(getTeam != null)
-		localStorage.removeItem('_team');
-	return getTeam;
-}
+var getTeam = localStorage.getItem('_team');
+if(getTeam != null)
+localStorage.removeItem('_team');
 
 angular.module('teamform-team-app', ['firebase'])
 .controller('TeamCtrl', ['$scope', '$firebaseObject', '$firebaseArray', 
@@ -324,9 +321,8 @@ angular.module('teamform-team-app', ['firebase'])
 		
 		var teamID;
 		//Team name from index.html
-		var teamnameFromindex = getTeamNameFromIndex();
-		if(teamnameFromindex != null)
-			teamID = teamnameFromindex;
+		if(getTeam != null)
+			teamID = getTeam;
 		else
 			teamID = $.trim( $scope.param.teamName );		
 		var eventName = getURLParameter("q");

@@ -36,11 +36,12 @@
    Back</button></a>
    <br>
 
+
    <div class="text-center">
       <h1>Team Page</h1>
       <h2 id="text_event_name"></h2>
       <h4 id="uid"></h4>
-       <div id="team_page_controller" ng-controller="TeamCtrl">
+       <div id="team_page_controller" ng-controller="TeamCtrl" ng-init="loadFunc()"> <!--Onload loadTeam to get teamname from index.hteml-->
 
          <div class="row">
 

@@ -175,6 +175,6 @@
 //Passing Team Name to teampage
 function passTeamName(T,E) {
   var url = "team.html?q=" + E;
-  window.location.href= url;
   localStorage.setItem('_team', T);
+  window.location.href = url;
 }
