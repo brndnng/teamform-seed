@@ -205,7 +205,7 @@
 			
 					
 			 
-					<h3>All teams:</h3>
+					<!--<h3>All teams:</h3>
 					<ul ng-repeat="t in team">
 						<li>
 						
@@ -215,7 +215,26 @@
 						
 						</li>
 						
-					</ul>			
+					</ul>-->			
+
+					
+					<h3>All teams:</h3>
+
+					<ul class="list-group" ng-repeat="t in team">
+						<li class="list-group-item">
+							
+							Team Name: {{t.$id}}  <br>
+							Preferred team size: {{t.size}} <br>
+							Current team members:
+							<li class="list-group-item" ng-repeat="member in t.teamMembers">
+								<!--<button type="button" class="btn btn-primary btn-sm btn-space">{{member}}</button>-->
+								<div class="alert alert-info" role="alert">{{member}}</div>
+							</li> 
+    								<br>
+						</li>
+						
+					</ul>
+
 					<h3>All event members:</h3>
 
 					<ul class="list-group" ng-repeat="m in filteredUsers">
@@ -224,11 +243,11 @@
 							Email: {{m.email}}  <br>
 							Name: {{m.name}} <br>
 							Skills:
-							<div class="btn-group" ng-repeat="skill in m.skills track by $index">
-								<button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button>
-							</div> <div style="line-height:100%;">
+							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
+								<div class="alert alert-info" role="alert">{{skill}}</div>
+							</li> <!--<div style="line-height:100%;">-->
     								<br>
-							</div> 
+							<!--</div> -->
 							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
 						</li>
 						
