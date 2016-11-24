@@ -234,7 +234,7 @@
 							<li class="btn-group" ng-repeat="skill in t.wantedSkills track by $index">
 								<div class="alert alert-info" role="alert">{{skill}}</div>
 							</li> <br>
-    						<button type="button" class="btn btn-primary" ng-click="inviteToMerge(t.$id,t.size,t.teamMembers)">Request to Merge With</button>	
+    						<button type="button" class="btn btn-primary" ng-click="requestToMerge(t.$id,t.size,t.teamMembers)">Request to Merge To</button>	
 						</li>
 						
 					</ul>
@@ -257,7 +257,11 @@
 						
 					</ul>
 			</div>
-
+			<h3>Team merge invites:</h3>
+              <div ng-repeat="t in invitedTeams">
+                  {{t.$id}}
+                  <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+              </div>
 
          </div>
 
