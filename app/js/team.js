@@ -77,6 +77,9 @@ angular.module('teamform-team-app', ['firebase'])
 	$scope.users = $firebaseArray(firebase.database().ref(refPath));
 	$scope.filteredUsers = [];
 
+	
+
+
 	/*for (i=0; i<$scope.users.length; i++){
 		console.log($scope.users.$id);
 	}*/
@@ -181,14 +184,18 @@ angular.module('teamform-team-app', ['firebase'])
 	*/
 	$scope.requests = [];
 	$scope.wantedSkills = [];
+	$scope.invitedTeams = [];
 	$scope.refreshViewRequestsReceived = function() {
 		
 		//$scope.test = "";		
 		$scope.requests = [];
 		$scope.filteredUsers = [];
 		
-		var teamID = $.trim( $scope.param.teamName );	
-				
+		var teamID = $.trim( $scope.param.teamName );
+
+		invited_refPath = "events/" + eventName + "/team/" + teamID + "/mergeRequests";
+		$scope.invitedTeams = $firebaseArray(firebase.database().ref(invited_refPath));	
+
 		$.each($scope.member, function(i,obj) {			
 			//$scope.test += i + " " + val;
 			//$scope.test += obj.$id + " " ;
@@ -504,10 +511,10 @@ angular.module('teamform-team-app', ['firebase'])
         });
 	};
 	
-	$scope.inviteToMerge = function(teamToMerge,teamSize,teamMembers){
+	$scope.requestToMerge = function(teamToMerge,teamSize,teamMembers){
 		var teamID = $.trim( $scope.param.teamName );
 		var eventName = getURLParameter("q");
-		var refPath = "events/" + eventName + "/team/" + teamToMerge + "/mergeInvites";
+		var refPath = "events/" + eventName + "/team/" + teamToMerge + "/mergeRequests";
 		var invites_ref = firebase.database().ref(refPath);
 		//console.log(teamMembers.length);
 		//console.log($scope.param.teamMembers.length);
@@ -535,7 +542,92 @@ angular.module('teamform-team-app', ['firebase'])
             }
         });
 	};
-	
+
+	$scope.acceptMerge = function(teamToMerge){
+		var teamID = $.trim( $scope.param.teamName );
+		var eventName = getURLParameter("q");
+
+		var teamToMerge_refPath = "events/" + eventName + "/team/" + teamToMerge;
+		var teamToMerge_ref = firebase.database().ref(teamToMerge_refPath);
+		var teamToMerge_members;
+
+		var refPath = "events/" + eventName + "/team/";
+		var ref = firebase.database().ref(refPath);
+
+		var refPath = "events/" + eventName + "/team/" + teamID + "/mergeRequests";
+		var invites_ref = firebase.database().ref(refPath);
+
+		/*teamToMerge_ref.once("value").then(function (snapshot){
+			teamToMerge_members = snapshot.child("teamMembers").numChildren();
+			console.log(teamToMerge_members);
+			console.log($scope.param.teamMembers.length);
+			console.log($scope.param.currentTeamSize);
+		});*/
+
+		
+			teamToMerge_ref.once("value").then(function (snapshot){
+				teamToMerge_members = snapshot.child("teamMembers").numChildren();
+				if ($scope.param.teamMembers.length + teamToMerge_members <= $scope.param.currentTeamSize){
+				//add teamToMerge members to current team
+				var hasTeamMembers = snapshot.hasChild("teamMembers");
+				if (hasTeamMembers){
+					//for each member in teamToMerge
+					snapshot.child("teamMembers").forEach(function(childSnapshot){
+						var memberID = childSnapshot.val();
+						if ($scope.param.teamMembers.indexOf(memberID) < 0){
+							$scope.param.teamMembers.push(memberID);
+							
+							//update joined_team of member
+							var joined_teamsPath = "users/"	+ memberID +"/joined_teams";
+							var joined_teams_ref = firebase.database().ref(joined_teamsPath);
+							joined_teams_ref.once("value").then(function(s){
+								//remove original joined_team
+								if (s.child(teamToMerge).val() == eventName)
+	                				joined_teams_ref.child(teamToMerge).remove();
+	                			//add new joined_team
+	           					var hasTeam = s.hasChild(teamID);
+	            				if (!hasTeam)
+	                				joined_teams_ref.child(teamID).set(eventName);
+	       					});
+						}
+						
+					});
+				}
+				//add teamToMerge wantedSkills to current team
+	            var hasSkill = snapshot.hasChild("wantedSkills");
+	            if(hasSkill){
+	            	//for each skill in teamToMerge
+	            	snapshot.child("wantedSkills").forEach(function(childSnapshot){
+	            		var skill = childSnapshot.val();
+	            		var skills_refPath = "events/" + eventName + "/team/" + teamID + "/wantedSkills";
+	            		var skills_ref = firebase.database().ref(skills_refPath);
+	        			skills_ref.once("value").then(function(s){
+	        				var matchSkill = s.hasChild(skill);
+	            			// If it does not exist, then add skill
+	            			if(!matchSkill)
+	                			skills_ref.child(skill).set(skill);
+	        			});
+	            	});
+	            }
+	            //remove team merge request
+	            invites_ref.once("value").then(function(snapshot){
+					invites_ref.child(teamToMerge).remove();
+				});
+				//delete teamToInvite
+				teamToMerge_ref.once("value").then(function (snapshot){
+					ref.child(teamToMerge).remove();
+					ref.child(teamID).child("teamMembers").set($scope.param.teamMembers);
+				});
+	        }
+	        else {
+            var repeatedNotice = "Merged team size will exceed Prefered team size.";
+          	invite = "success";
+            window.alert(repeatedNotice);
+       		};
+		});
+       	
+       	    	
+	};
 		
 }]);
 
