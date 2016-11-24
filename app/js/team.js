@@ -158,6 +158,8 @@ angular.module('teamform-team-app', ['firebase'])
 					$scope.meeting_show=Object.assign({},$scope.meetinginput);
 					document.getElementById('firstMeetingShow').style.display = 'block';
 				}
+				else
+					alert("You're not leader! Only can leader hold meeting.")
 			}
 
 		$scope.addjoins = function() {
@@ -627,6 +629,6 @@ angular.module('teamform-team-app', ['firebase'])
 		
 }]);
 
-window.onload = function() {
+/*window.onload = function() {
   angular.element(document.getElementById('teamform-team-app')).scope().loadFunc();
-};
+};*/

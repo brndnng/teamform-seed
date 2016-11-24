@@ -164,7 +164,7 @@
  									<label>Description:</label>
  									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Question content..."></textarea>
  									<br><br>
- 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="(!input.desc ||!input.holddate) && {{isTeamLeader}}">
+ 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="!input.desc ||!input.holddate">
  								</div>
  							
  							</form>
