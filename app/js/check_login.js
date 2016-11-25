@@ -117,7 +117,7 @@
                       else
                         for(var i=0;i<jointeam.length;i++)
                         {
-                          document.getElementById('showInfo').innerHTML += "<a href=\"javascript:passTeamName(\"" + jointeam[i] + "\",\""+ fromEvent[i] + "\");\"><b>" + jointeam[i] + "</b></a> (from " + fromEvent[i] + ") ";
+                          document.getElementById('showInfo').innerHTML += "<a href=\"javascript:passTeamName('" + jointeam[i] + "','"+ fromEvent[i] + "');\"><b>" + jointeam[i] + "</b></a> (from " + fromEvent[i] + ") ";
                           if(isTeamLeader[i])
                             document.getElementById('showInfo').innerHTML += "<span class=\"label label-primary\">Leader</span>";
                           else
