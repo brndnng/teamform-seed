@@ -26,6 +26,7 @@
 
                 });
             });
+			localStorage.setItem('_uid', user.uid);
 
             user.getToken().then(function(accessToken) {
               document.getElementById('sign-in-status').textContent = 'Signed in';
@@ -158,6 +159,10 @@
             document.getElementById('user-info').style.display = 'none';
             document.getElementById('showInfo').style.display = 'none';
             document.getElementById('showInfo').innerHTML = "";
+			
+			var checkUID = localStorage.getItem('_uid');
+			if(checkUID!=null)
+				localStorage.removerItem('_uid');
 
           }
         }, function(error) {

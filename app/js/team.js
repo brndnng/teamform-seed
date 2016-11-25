@@ -97,19 +97,20 @@ angular.module('teamform-team-app', ['firebase'])
 	//Meeting()
 	
 		var haveTeamInThisEvent = false;
-		var userID=document.getElementById('uid').textContent;
-		userID = String(userID);
+		var userID=localStorage.getItem('_uid');
 		console.log(userID);
 		var meeting_teamsPath = "users/"	+ userID +"/joined_teams";
-		var meeting_teams_ref = firebase.database().ref(meeting_teamsPath);
-	
-		var meeting_teams_array = $firebaseArray(meeting_teams_ref);
-		console.log(meeting_teams_array);
-		var teamKeys =  Object.keys(meeting_teams_array);
-		var teamvalues = Object.values(meeting_teams_array);
-		var eventIndex = teamvalues.indexOf(eventName);
+		var query = firebase.database().ref(meeting_teamsPath).orderByKey();
+        query.once("value")
+           .then(function(snapshot) {
+             snapshot.forEach(function(childSnapshot) {
+				 if(childSnapshot.val()==eventName)
+					 haveTeamInThisEvent = true;
+				});
+		});
+		console.log(haveTeamInThisEvent);
 		var meeting_ref = firebase.database().ref("meeting");
-		$scope.meeting_array = $firebaseArray(meeting_ref);
+		$scope.meeting_arrays = $firebaseArray(meeting_ref);
 		$scope.meeting_show = {
 			event: "",
 			team: "",
@@ -117,29 +118,27 @@ angular.module('teamform-team-app', ['firebase'])
 			holddate: "",
 			joins: 0
 		};
-		if(eventIndex!=-1)
-		haveTeamInThisEvent = true;
 		if(haveTeamInThisEvent)
 		{
 			document.getElementById('meeting').style.display = 'block';
-			$scope.isTeamLeader;
+			/*$scope.isTeamLeader;
 			if($scope.team[$scope.team.indexOf(teamKeys[eventIndex])].teamLeader == getUID())
 				$scope.isTeamLeader=true;
 			else
 				$scope.isTeamLeader=false;
-			
-			var meeting_index;
+			*/
+			var meeting_index=0;
 			//check first meeting is held before or not
-			for(meeting_index=0;meeting_index<$scope.meeting_array.length;meeting_index++)
-				if($scope.meeting_array[meeting_index].event==eventName)
-					{
-						$scope.meeting_show=Object.assign({},$scope.meeting_array[meeting_index]);
-						break;
-					}
+			/*$scope.meeting_arrays.$loaded()
+			.then(function(){
+				angular.forEach($scope.meeting_arrays, function($scope.meeting_arrays) {
+					console.log($scope.meeting_array);
+				})
+			});
 			if(meeting_index == $scope.meeting_array.length)
 				document.getElementById('firstMeetingShow').style.display = 'none';
 			else
-				document.getElementById('firstMeetingShow').style.display = 'block';
+				document.getElementById('firstMeetingShow').style.display = 'block';*/
 			$scope.meetinginput = {
 				event: "",
 				team: "",
@@ -166,7 +165,7 @@ angular.module('teamform-team-app', ['firebase'])
 				else
 					alert("You're not leader! Only can leader hold meeting.")
 			}
-
+	/*
 		$scope.addjoins = function() {
 			$scope.meeting_show.joins ++;
 			for(var i=0;i<$scope.meeting_array.length;i++)
@@ -183,7 +182,7 @@ angular.module('teamform-team-app', ['firebase'])
 		$scope.showTime = function(v1) {
 				var d1 = new Date(v1);
 				return d1.toLocaleTimeString();
-			}
+			}*/
 		//End of Meeting()
 	
 	$scope.requests = [];
