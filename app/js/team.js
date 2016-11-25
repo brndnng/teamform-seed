@@ -12,10 +12,7 @@ $(document).ready(function(){
 
 });
 
-//Getting team name from index.html
-var getTeam = localStorage.getItem('_team');
-if(getTeam != null)
-localStorage.removeItem('_team');
+
 
 angular.module('teamform-team-app', ['firebase'])
 .controller('TeamCtrl', ['$scope', '$firebaseObject', '$firebaseArray', 
@@ -32,6 +29,8 @@ angular.module('teamform-team-app', ['firebase'])
 
 	var eventName = getURLParameter("q");	
 	
+	
+
 	// TODO: implementation of MemberCtrl	
 	$scope.param = {
 		"teamName" : '',
@@ -39,9 +38,13 @@ angular.module('teamform-team-app', ['firebase'])
 		"teamMembers" : [],
 		"teamLeader" : '',
 	};
-		
-	
-
+	//Getting team name from index.html
+	var getTeam = localStorage.getItem('_team');
+	if(getTeam != null){
+		localStorage.removeItem('_team');
+		console.log(getTeam);
+		$scope.param.teamName = getTeam;
+	}
 	refPath =  "events/" + eventName + "/admin";
 	retrieveOnceFirebase(firebase, refPath, function(data) {	
 			if (!checkLoginstate()){
@@ -92,9 +95,11 @@ angular.module('teamform-team-app', ['firebase'])
 	});*/
 
 	//Meeting()
-	/*
+	
 		var haveTeamInThisEvent = false;
 		var userID=document.getElementById('uid').textContent;
+		userID = String(userID);
+		console.log(userID);
 		var meeting_teamsPath = "users/"	+ userID +"/joined_teams";
 		var meeting_teams_ref = firebase.database().ref(meeting_teamsPath);
 	
@@ -180,7 +185,7 @@ angular.module('teamform-team-app', ['firebase'])
 				return d1.toLocaleTimeString();
 			}
 		//End of Meeting()
-	*/
+	
 	$scope.requests = [];
 	$scope.wantedSkills = [];
 	$scope.invitedTeams = [];
