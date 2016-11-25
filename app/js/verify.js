@@ -53,7 +53,12 @@ function getUID(){
       return false;
     }
   });
-  //return uid;
+  /*var user = firebase.auth().currentUser;
+  if (user != null) {
+  var uid = user.uid; 
+  }
+  console.log(user.uid);
+  return uid;*/
 }
 function checkLoginstate(){
   var user = firebase.auth().currentUser;
