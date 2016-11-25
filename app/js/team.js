@@ -75,8 +75,8 @@ angular.module('teamform-team-app', ['firebase'])
 	refPath = "users/";
 	$scope.users = [];
 	$scope.users = $firebaseArray(firebase.database().ref(refPath));
+	$scope.eventUsers = [];
 	$scope.filteredUsers = [];
-
 	
 
 
@@ -87,7 +87,7 @@ angular.module('teamform-team-app', ['firebase'])
 		console.log(5);
 		$.each($scope.users, function(i,obj){
 			if (obj.$id == mobj.$id)
-				$scope.filteredUsers.push(obj);
+				$scope.eventUsers.push(obj);
 				console.log(mobj.$id);
 
 		});
@@ -193,7 +193,6 @@ angular.module('teamform-team-app', ['firebase'])
 		
 		//$scope.test = "";		
 		$scope.requests = [];
-		$scope.filteredUsers = [];
 		
 		var teamID = $.trim( $scope.param.teamName );
 
@@ -223,11 +222,14 @@ angular.module('teamform-team-app', ['firebase'])
 			$.each($scope.users, function(i,mobj){
 				var m = mobj.$id;
 				if(m===userID) {
-           		$scope.filteredUsers.push(mobj);
-           		} 
+           			$scope.eventUsers.push(mobj);
+           		}
 			});
 		});
-		
+
+		$scope.showFilteredUsers();
+		console.log($scope.filteredUsers);
+
 		$scope.$apply();
 		
 	}
@@ -344,7 +346,7 @@ angular.module('teamform-team-app', ['firebase'])
 				if ( data.child("size").val() != null ) {
 				
 					$scope.param.currentTeamSize = data.child("size").val();
-				
+					
 					$scope.refreshViewRequestsReceived();
 					
 				} 
@@ -357,10 +359,11 @@ angular.module('teamform-team-app', ['firebase'])
 				if ( data.child("wantedSkills").val() != null) {
 					$scope.wantedSkills = $firebaseArray(firebase.database().ref(refPath+"/wantedSkills"));
 				}
-				}
-				else 
-					window.alert("You don't have permission to edit this team!");
 			}
+			else 
+				window.alert("You don't have permission to edit this team!");
+			}
+
 			$scope.$apply(); // force to refresh
 		});
 
@@ -445,6 +448,7 @@ angular.module('teamform-team-app', ['firebase'])
             // If it does not exist, then add newSkill
             if(!hasSkill){
                 skills_ref.child(newSkill).set(newSkill);
+				$scope.showFilteredUsers();
             }
             else{
                 var repeatedNotice = "\"" + newSkill + "\" already exists.";
@@ -481,6 +485,7 @@ angular.module('teamform-team-app', ['firebase'])
 
             // Remove selected item
             skills_ref.child(rmSkill.$id).remove();
+			$scope.showFilteredUsers();
 
         });
     };
@@ -631,6 +636,31 @@ angular.module('teamform-team-app', ['firebase'])
        	
        	    	
 	};
+
+	$scope.showFilteredUsers = function(){
+		// Empty filteredUsers[] 
+		$scope.filteredUsers = [];
+		var teamID = $.trim( $scope.param.teamName );
+		var eventName = getURLParameter("q");
+		var refPath = "events/" + eventName + "/team/" + teamID;
+		var wantedSkills_ref = firebase.database().ref(refPath);
+		wantedSkills_ref.once("value", function(snapshot){
+			snapshot.child("wantedSkills").forEach(function(childSnapshot){
+				$.each($scope.users, function(i,obj){
+					// If the user's skills are defined
+					if(obj.skills != undefined){
+						// childSnapshot.val() is the wantedSkill
+						if(obj.skills.hasOwnProperty(childSnapshot.val())){
+							// Prevent duplicated obj added to the filteredUsers
+							if($scope.filteredUsers.indexOf(obj) == -1){
+								$scope.filteredUsers.push(obj);
+							}
+						}
+					}
+				});		
+			});
+		});	
+	};	
 		
 }]);
 
