@@ -239,31 +239,54 @@
 						</li>
 						
 					</ul>
-
-					<h3>All event members:</h3>
-
-					<ul class="list-group" ng-repeat="m in filteredUsers">
-						<li class="list-group-item">
-							
-							Email: {{m.email}}  <br>
-							Name: {{m.name}} <br>
-							Skills:
-							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
-								<div class="alert alert-info" role="alert">{{skill}}</div>
-							</li> <!--<div style="line-height:100%;">-->
-    								<br>
-							<!--</div> -->
-							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
-						</li>
-						
-					</ul>
 			</div>
-			<h3>Team merge invites:</h3>
-              <div ng-repeat="t in invitedTeams">
-                  {{t.$id}}
-                  <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
-              </div>
 
+			<div class="col-md-2 col-xs-2"></div>
+			<div class="col-md-6 col-xs-6 text-left">
+				<h3>All event members:</h3>
+
+				<ul class="list-group" ng-repeat="m in eventUsers">
+					<li class="list-group-item">
+						
+						Email: {{m.email}}  <br>
+						Name: {{m.name}} <br>
+						Skills:
+						<li class="btn-group" ng-repeat="skill in m.skills track by $index">
+							<div class="alert alert-info" role="alert">{{skill}}</div>
+						</li> <!--<div style="line-height:100%;">-->
+						<br>
+						<!--</div> -->
+						<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-md-4 col-xs-4 text-left">
+				<h3>Suggested members:</h3>
+
+				<ul class="list-group" ng-repeat="m in filteredUsers">
+					<li class="list-group-item">
+						
+						Email: {{m.email}}  <br>
+						Name: {{m.name}} <br>
+						Skills:
+						<li class="btn-group" ng-repeat="skill in m.skills track by $index">
+							<div class="alert alert-info" role="alert">{{skill}}</div>
+						</li> <!--<div style="line-height:100%;">-->
+						<br>
+						<!--</div> -->
+						<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-md-12 col-xs-12 text-left-panel">
+				<h3>Team merge invites:</h3>
+	            <div ng-repeat="t in invitedTeams">
+	                {{t.$id}}
+	                <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+	            </div>
+            </div>
          </div>
 
 
