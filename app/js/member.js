@@ -7,7 +7,6 @@ $(document).ready(function(){
 		$('#text_event_name').text("Event name: " + eventName);
 		$('#member_page_controller').show();
 	}
-
 });
 
 angular.module('teamform-member-app', ['firebase'])
@@ -18,17 +17,26 @@ angular.module('teamform-member-app', ['firebase'])
 	
 	// Call Firebase initialization code defined in site.js
 	initalizeFirebase();
-	var userUID, userName;
-		firebase.auth().onAuthStateChanged(function(user){
+	$scope.userID = "";
+	$scope.userName = "";
+
+	firebase.auth().onAuthStateChanged(function(user){
 		if (user) {
-		$scope.userID = user.uid;
-		$scope.userName = user.displayName;	
-		//$scope.teams = {};
-		var invited_refPath = "events/" + getURLParameter("q") + "/member/" + $scope.userID + "/invites";
-		var invited_ref = firebase.database().ref(invited_refPath);
-		$scope.invitedTeams = $firebaseArray(invited_ref);
-		console.log(invited_refPath);
-		//console.log($scope.invitedTeams);
+			$scope.userID = user.uid;
+			$scope.userName = user.displayName;	
+			//$scope.teams = {};
+			var selection_refPath = "events/" + getURLParameter("q") + "/member/" + $scope.userID;
+			var selection_ref = firebase.database().ref(selection_refPath);
+			selection_ref.once("value", function(snapshot){
+				if(snapshot.hasChild("selection"))
+					$scope.selection = snapshot.val().selection;
+			});
+
+			var invited_refPath = "events/" + getURLParameter("q") + "/member/" + $scope.userID + "/invites";
+			var invited_ref = firebase.database().ref(invited_refPath);
+			$scope.invitedTeams = $firebaseArray(invited_ref);
+			//console.log(invited_refPath);
+			//console.log($scope.invitedTeams);	
 		}
 		else{
 			$scope.userID = "";
@@ -37,6 +45,7 @@ angular.module('teamform-member-app', ['firebase'])
 			//window.alert("Please login");
 			window.location.href= "redirect.html";
 		}
+
 	})	
 
 	//$scope.userID = "";
@@ -49,9 +58,10 @@ angular.module('teamform-member-app', ['firebase'])
 		//window.alert("Please login");
 		//window.location.href= "index.html";
 		//}	
-	
-	
-	$scope.loadFunc = function() {
+
+
+	/*$scope.loadFunc = function() {
+		console.log("LoadFunc");
 		var userID = $scope.userID;
 		if ( userID !== '' ) {
 			
@@ -74,10 +84,9 @@ angular.module('teamform-member-app', ['firebase'])
 				$scope.$apply();
 			});
 		}
-	}
+	}*/
 	
-	$scope.saveFunc = function() {
-		
+	/*$scope.saveFunc = function() {
 		
 		var userID = $.trim( $scope.userID );
 		var userName = $.trim( $scope.userName );
@@ -109,17 +118,20 @@ angular.module('teamform-member-app', ['firebase'])
 				// Finally, go back to the front-end
 				window.location.href= "index.html";
 			});
-			
-			
-		
-					
 		}
-	}
+	}*/
 	
 	$scope.refreshTeams = function() {
-		var userID = $.trim( $scope.userID );
 		var refPath = "events/" + getURLParameter("q") + "/team";	
 		var ref = firebase.database().ref(refPath);
+	
+		$scope.teams = $firebaseArray(ref);
+		$scope.teams.$loaded().then( function(data) {				
+		}) 
+		.catch(function(error) {
+			// Database connection error handling...
+			// console.error("Error:", error);
+		});
 
 		
 		// Link and sync a firebase object
@@ -132,22 +144,11 @@ angular.module('teamform-member-app', ['firebase'])
 			else {
 				$scope.selection.push(item);
 			}
+			var userID = $.trim($scope.userID);
+			var selection_refPath = "events/" + getURLParameter("q") + "/member/" + userID;
+			var selection_ref = firebase.database().ref(selection_refPath);
+			selection_ref.child("selection").set($scope.selection);
 		}
-	
-	
-		$scope.teams = $firebaseArray(ref);
-		$scope.teams.$loaded()
-			.then( function(data) {
-								
-							
-							
-			}) 
-			.catch(function(error) {
-				// Database connection error handling...
-				//console.error("Error:", error);
-			});
-			
-		
 	}
 	$scope.acceptInvite = function(teamID){
 		//add member to /events/<event>/team/<team>/teamMembers

@@ -172,7 +172,6 @@ angular.module('teamform-team-app', ['firebase'])
 			var userID = obj.$id;
 			if ( typeof obj.selection != "undefined"  && obj.selection.indexOf(teamID) > -1 ) {
 				//$scope.test += userID + " " ;
-				
 				$scope.requests.push(userID);
 
 				var joined_teamsPath = "users/"	+ userID +"/joined_teams";
@@ -194,7 +193,6 @@ angular.module('teamform-team-app', ['firebase'])
 		});
 
 		$scope.showFilteredUsers();
-		console.log($scope.filteredUsers);
 
 		$scope.$apply();
 		
