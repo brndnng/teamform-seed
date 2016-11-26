@@ -172,7 +172,6 @@ angular.module('teamform-team-app', ['firebase'])
 			var userID = obj.$id;
 			if ( typeof obj.selection != "undefined"  && obj.selection.indexOf(teamID) > -1 ) {
 				//$scope.test += userID + " " ;
-				
 				$scope.requests.push(userID);
 
 				var joined_teamsPath = "users/"	+ userID +"/joined_teams";
@@ -194,7 +193,6 @@ angular.module('teamform-team-app', ['firebase'])
 		});
 
 		$scope.showFilteredUsers();
-		console.log($scope.filteredUsers);
 
 		$scope.$apply();
 		
@@ -613,7 +611,7 @@ angular.module('teamform-team-app', ['firebase'])
 		var wantedSkills_ref = firebase.database().ref(refPath);
 		wantedSkills_ref.once("value", function(snapshot){
 			snapshot.child("wantedSkills").forEach(function(childSnapshot){
-				$.each($scope.users, function(i,obj){
+				$.each($scope.eventUsers, function(i,obj){
 					// If the user's skills are defined
 					if(obj.skills != undefined){
 						// childSnapshot.val() is the wantedSkill
