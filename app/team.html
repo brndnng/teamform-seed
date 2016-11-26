@@ -162,29 +162,26 @@
  								<div class="form-group">
  									<label>Date: <span class="required" ng-show="form.holddate.$error.required">*</span></label>
  									<input type="datetime-local" name="holddate" ng-model="meetinginput.holddate" required>
- 								</div>
- 
- 								<div class="form-group">
  									<label>Description:</label>
- 									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Question content..."></textarea>
+ 									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Question content..." required></textarea>
  									<br><br>
- 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="!input.desc ||!input.holddate">
+ 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="!meetinginput.desc ||!meetinginput.holddate">
  								</div>
  							
  							</form>
  
- 						<div class="css-form col-md-8" id="firstMeetingShow">
+ 						<div class="css-form col-md-8" >
  						<h1>Your First Meeting:</h1>
- 						<div class="panel panel-success">
- 							<div class="panel-heading"><span class="label label-default"><span class="glyphicon glyphicon-blackboard" align="center"></span></span>  {{showDate(meeting_show.holddate)}} {{showTime(meeting_show.holddate)}}
- 							</div>
- 							<div class="panel-body">{{meeting_show.desc}}</div>			
- 							<div class="panel-footer">
- 								<button class="btn btn-primary" type="button" ng-click="addjoins()">
- 									<span class="glyphicon glyphicon-ok"></span> Join!
- 									<span class="badge"> {{meeting_show.joins}}</span> 
- 								</button>
- 							 </div>
+	 						<div class="panel panel-success" ng-repeat="meeting in meetings | filter:meeting_teamName:true">
+	 							<div class="panel-heading"><span class="label label-default"><span class="glyphicon glyphicon-blackboard" align="center"></span></span>  {{showDate(meeting.holddate)}} {{showTime(meeting.holddate)}}
+	 							</div>
+	 							<div class="panel-body">{{meeting.desc}}</div>			
+	 							<div class="panel-footer">
+	 								<button class="btn btn-primary" type="button" ng-click="meeting.joins = meeting.joins+1; meetings.$save(meeting);">
+	 									<span class="glyphicon glyphicon-ok"></span> Join!
+	 									<span class="badge"> {{meeting.joins}}</span> 
+	 								</button>
+	 							 </div>
  							 </div>
  						</div>
  

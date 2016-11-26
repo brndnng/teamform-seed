@@ -98,58 +98,34 @@ angular.module('teamform-team-app', ['firebase'])
 	
 		var haveTeamInThisEvent = false;
 		var userID=localStorage.getItem('_uid');
-		console.log(userID);
-		var meeting_teamsPath = "users/"	+ userID +"/joined_teams";
-		var query = firebase.database().ref(meeting_teamsPath).orderByKey();
-        query.once("value")
-           .then(function(snapshot) {
-             snapshot.forEach(function(childSnapshot) {
-				 if(childSnapshot.val()==eventName)
-					 haveTeamInThisEvent = true;
-				});
+		var meeting_teamsPath = "users/" + userID;
+		$scope.isTeamLeader = '';
+		$scope.meeting_teamName = '';
+		retrieveOnceFirebase(firebase, meeting_teamsPath, function(data) {
+			if(data.child("events_teamLeader").val()!=null)
+			{
+				var values = Object.values(data.child("events_teamLeader").val());
+				var keys = Object.keys(data.child("events_teamLeader").val());
+				console.log(values);
+                for(var i=0;i<values.length;i++)
+	            if(values[i]==eventName)
+	            {
+	            	haveTeamInThisEvent=true;
+	            	$scope.isTeamLeader=true;
+	            	//$scope.meeting_teamName=keys[i];
+	            }
+			}
 		});
-		console.log(haveTeamInThisEvent);
+
 		var meeting_ref = firebase.database().ref("meeting");
-		$scope.meeting_arrays = $firebaseArray(meeting_ref);
-		$scope.meeting_show = {
+		$scope.meetings = $firebaseArray(meeting_ref);
+		$scope.meetinginput = {
 			event: "",
 			team: "",
 			desc: "",
 			holddate: "",
 			joins: 0
 		};
-		if(haveTeamInThisEvent)
-		{
-			document.getElementById('meeting').style.display = 'block';
-			/*$scope.isTeamLeader;
-			if($scope.team[$scope.team.indexOf(teamKeys[eventIndex])].teamLeader == getUID())
-				$scope.isTeamLeader=true;
-			else
-				$scope.isTeamLeader=false;
-			*/
-			var meeting_index=0;
-			//check first meeting is held before or not
-			/*$scope.meeting_arrays.$loaded()
-			.then(function(){
-				angular.forEach($scope.meeting_arrays, function($scope.meeting_arrays) {
-					console.log($scope.meeting_array);
-				})
-			});
-			if(meeting_index == $scope.meeting_array.length)
-				document.getElementById('firstMeetingShow').style.display = 'none';
-			else
-				document.getElementById('firstMeetingShow').style.display = 'block';*/
-			$scope.meetinginput = {
-				event: "",
-				team: "",
-				desc: "",
-				holddate: "",
-				joins: 0
-			};
-	
-		}
-		else
-			document.getElementById('meeting').style.display = 'none';
 	
 		$scope.addMeeting = function() {
 				
@@ -157,23 +133,14 @@ angular.module('teamform-team-app', ['firebase'])
 				if ($scope.meetinginput.desc != "" && $scope.meetinginput.holddate !="" && $scope.isTeamLeader) {
 					$scope.meetinginput.holddate = $scope.meetinginput.holddate.toString();
 					$scope.meetinginput.joins = 0;
-					// add an input question
-					$scope.meeting_array.$add($scope.meetinginput);
-					$scope.meeting_show=Object.assign({},$scope.meetinginput);
-					document.getElementById('firstMeetingShow').style.display = 'block';
+					$scope.meetinginput.event = eventName;
+					$scope.meetinginput.team = $scope.meeting_teamName;
+					$scope.meetings.$add($scope.meetinginput);
 				}
 				else
-					alert("You're not leader! Only can leader hold meeting.")
+					alert("You're not leader! Only can leader hold meeting.");
 			}
-	/*
-		$scope.addjoins = function() {
-			$scope.meeting_show.joins ++;
-			for(var i=0;i<$scope.meeting_array.length;i++)
-				if($scope.meeting_show.event==$scope.meeting_array[i].event&&$scope.meeting_show.team==$scope.meeting_array[i].team)
-					$scope.meeting_array[i].joins++;
-			$scope.meeting_array.$save();
-		}
-	
+		
 		$scope.showDate = function(v1) {
 			var d1 = new Date(v1);
 			return d1.toDateString();
@@ -182,7 +149,7 @@ angular.module('teamform-team-app', ['firebase'])
 		$scope.showTime = function(v1) {
 				var d1 = new Date(v1);
 				return d1.toLocaleTimeString();
-			}*/
+			}
 		//End of Meeting()
 	
 	$scope.requests = [];
@@ -332,7 +299,8 @@ angular.module('teamform-team-app', ['firebase'])
 		if(getTeam != null)
 			teamID = getTeam;
 		else
-			teamID = $.trim( $scope.param.teamName );		
+			teamID = $.trim( $scope.param.teamName );
+		$scope.meeting_teamName = teamID; //For meeting purpose	
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamID ;
 		retrieveOnceFirebase(firebase, refPath, function(data) {	
