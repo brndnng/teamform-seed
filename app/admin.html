@@ -102,35 +102,59 @@
 
          <hr>
 
-		 <div class="row">
-			 <div class="col-md-6 col-xs-6 text-right" >
-			 
-				<h3>All teams:</h3>
-				<ul ng-repeat="t in team">
-					<li>
-					
-						User ID: {{t.$id}}  <br>
-						Preferred team size: <span class="badge">{{t.size}}</span> <br>
-						Current team members: {{t.teamMembers}}
-					
-					</li>
-					
-				</ul>
+		 <div class="row-fluid">
+			 <div class="col-md-6 col-sm-6 text-left" >
+			   <div class="panel-group">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+            <h3 class="panel-title"><a data-toggle="collapse" href="#collapse1">All teams:</a></h3>
+          </div>
+          <div id="collapse1" class="panel-collapse collapse">
+          <ul class="list-group" ng-repeat="t in team">
+            <li class="list-group-item">
+              
+              Team Name: {{t.$id}}  <br>
+              Preferred team size: {{t.size}}<br>
+              Current team members:
+              <li class="btn-group" ng-repeat="member in t.teamMembers">
+                <!--<button type="button" class="btn btn-primary btn-sm btn-space">{{member}}</button>-->
+                <div class="alert alert-info hideOverflow" role="alert">{{member}}</div>
+              </li> <br>
+              Wanted Skills:
+              <li class="btn-group" ng-repeat="skill in t.wantedSkills track by $index">
+                <div class="alert alert-info" role="alert">{{skill}}</div>
+              </li> <br>
+                <!--button type="button" class="btn btn-primary" ng-click="requestToMerge(t.$id,t.size,t.teamMembers)">Request to Merge To</button-->  
+            </li>
+            
+          </ul>
+          </div>
+          </div>
+          </div>
 
 			 </div>
 			 
-			 <div class="col-md-6 col-xs-6 text-left">
-							
-			 
-			  <h3>All members:</h3>
-			  <ul ng-repeat="m in member">
+			 <div class="col-md-6 col-sm-6 text-left">
+					<div class="panel-group">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+            <h3 class="panel-title"><a data-toggle="collapse" href="#collapse2">All members:</a></h3>
+             </div>
+          <div id="collapse2" class="panel-collapse collapse">
+			  <ul class="list-group" ng-repeat="m in member">
 				
-				  <li>ID = {{m.$id}} <br> 
+				  <li class="list-group-item">ID = {{m.$id}} <br> 
 				  Name = {{m.name}} <br>
-				  request to join the following teams: {{m.selection | json}}</li>
+          Request to join the following teams: 
+          <li class="btn-group" ng-repeat="selection in m.selection track by $index">
+            <div class="alert alert-info" role="alert">{{selection}}</div>
+          </li>
+				  </li>
 			  </ul>
 
 			 </div>
+       </div>
+       </div>
 		 </div>
 
 
