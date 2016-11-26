@@ -611,7 +611,7 @@ angular.module('teamform-team-app', ['firebase'])
 		var wantedSkills_ref = firebase.database().ref(refPath);
 		wantedSkills_ref.once("value", function(snapshot){
 			snapshot.child("wantedSkills").forEach(function(childSnapshot){
-				$.each($scope.users, function(i,obj){
+				$.each($scope.eventUsers, function(i,obj){
 					// If the user's skills are defined
 					if(obj.skills != undefined){
 						// childSnapshot.val() is the wantedSkill
