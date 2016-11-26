@@ -152,7 +152,7 @@
             </div>
 
             				<!-- Holding Meeting -->
- 				<div class="row" id="meeting">
+ 				<div class="row-fluid" id="meeting">
  					<div class="col-sm-12">
  						<div class="page-header">
  				  			<h1>Holding your team's first meeting!</h1>
@@ -192,8 +192,8 @@
 
  					<!-- End of Meeting Section -->  
 
-
-            <div class="col-md-4 col-xs-4 text-left">
+ 			<div class="row-fluid"> 
+            	<div class="col-sm-4 text-left">
 			
 					
 			 
@@ -208,10 +208,12 @@
 						</li>
 						
 					</ul>-->			
-
-					
-					<h3>All teams:</h3>
-
+					<div class="panel-group">
+  					<div class="panel panel-default">
+    				<div class="panel-heading">
+						<h3 class="panel-title"><a data-toggle="collapse" href="#collapse1">All teams:</a></h3>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse">
 					<ul class="list-group" ng-repeat="t in team">
 						<li class="list-group-item">
 							
@@ -220,7 +222,7 @@
 							Current team members:
 							<li class="btn-group" ng-repeat="member in t.teamMembers">
 								<!--<button type="button" class="btn btn-primary btn-sm btn-space">{{member}}</button>-->
-								<div class="alert alert-info" role="alert">{{member}}</div>
+								<div class="alert alert-info hideOverflow" role="alert">{{member}}</div>
 							</li> <br>
 							Wanted Skills:
 							<li class="btn-group" ng-repeat="skill in t.wantedSkills track by $index">
@@ -230,55 +232,71 @@
 						</li>
 						
 					</ul>
-			</div>
+					</div>
+					</div>
+					</div>
+				</div>
 
-			<div class="col-md-4 col-xs-4 text-left">
-				<h3>All event members:</h3>
+				<div class="col-sm-4 text-left">
+					<div class="panel-group">
+	  					<div class="panel panel-default">
+	    				<div class="panel-heading">
+							<h3 class="panel-title"><a data-toggle="collapse" href="#collapse2">All event members:</a></h3>
+						</div>
+					<div id="collapse2" class="panel-collapse collapse">
+					<ul class="list-group" ng-repeat="m in eventUsers">
+						<li class="list-group-item">
+							
+							Email: {{m.email}}  <br>
+							Name: {{m.name}} <br>
+							Skills:
+							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
+								<div class="alert alert-info" role="alert">{{skill}}</div>
+							</li> <!--<div style="line-height:100%;">-->
+							<br>
+							<!--</div> -->
+							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+						</li>
+					</ul>
+					</div>
+					</div>
+					</div>
+				</div>
 
-				<ul class="list-group" ng-repeat="m in eventUsers">
-					<li class="list-group-item">
-						
-						Email: {{m.email}}  <br>
-						Name: {{m.name}} <br>
-						Skills:
-						<li class="btn-group" ng-repeat="skill in m.skills track by $index">
-							<div class="alert alert-info" role="alert">{{skill}}</div>
-						</li> <!--<div style="line-height:100%;">-->
-						<br>
-						<!--</div> -->
-						<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
-					</li>
-				</ul>
-			</div>
+				<div class="col-sm-4 text-left">
+					<div class="panel-group">
+	  					<div class="panel panel-default">
+	    				<div class="panel-heading">
+							<h3 class="panel-title"><a data-toggle="collapse" href="#collapse3">Suggested members:</a></h3>
+						</div>
+					<div id="collapse3" class="panel-collapse collapse">
+					<ul class="list-group" ng-repeat="m in filteredUsers">
+						<li class="list-group-item">
+							
+							Email: {{m.email}}  <br>
+							Name: {{m.name}} <br>
+							Skills:
+							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
+								<div class="alert alert-info" role="alert">{{skill}}</div>
+							</li> <!--<div style="line-height:100%;">-->
+							<br>
+							<!--</div> -->
+							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+						</li>
+					</ul>
+					</div>
+					</div>
+					</div>
+				</div>
 
-			<div class="col-md-4 col-xs-4 text-left">
-				<h3>Suggested members:</h3>
-
-				<ul class="list-group" ng-repeat="m in filteredUsers">
-					<li class="list-group-item">
-						
-						Email: {{m.email}}  <br>
-						Name: {{m.name}} <br>
-						Skills:
-						<li class="btn-group" ng-repeat="skill in m.skills track by $index">
-							<div class="alert alert-info" role="alert">{{skill}}</div>
-						</li> <!--<div style="line-height:100%;">-->
-						<br>
-						<!--</div> -->
-						<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
-					</li>
-				</ul>
-			</div>
-
-			<div class="col-md-12 col-xs-12 text-left-panel">
-				<h3>Team merge invites:</h3>
-	            <div ng-repeat="t in invitedTeams">
-	                {{t.$id}}
-	                <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+				<div class="col-md-12 col-xs-12 text-left-panel">
+					<h3>Team merge invites:</h3>
+		            <div ng-repeat="t in invitedTeams">
+		                {{t.$id}}
+		                <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+		            </div>
 	            </div>
-            </div>
          </div>
-
 
        </div>
    </div>
