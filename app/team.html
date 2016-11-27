@@ -315,14 +315,14 @@
 
 				<div class="col-sm-6">
 					<div class="panel-group">
-	  					<div class="panel panel-success">
+	  					<div class="panel panel-danger">
 	    				<div class="panel-heading">
 							<h3 class="panel-title"><a data-toggle="collapse" href="#collapse5">Team merge invites:</a></h3>
 						</div>
 				<div id="collapse5" class="panel-collapse collapse">
 		            <div ng-repeat="t in invitedTeams">
 		                {{t.$id}}
-		                <button type="button" class="btn btn-success" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+		                <button type="button" class="btn btn-danger" ng-click="acceptMerge(t.$id)">Accept Invite</button>
 		            </div>
 				</div>
 	            </div>
