@@ -81,22 +81,31 @@
 			       <div class="col-sm-6 text-left">
     				    <h3>Your team preference:</h3>
     			       <div ng-repeat="team in teams">
-    					  					  
-    					 <div class="checkbox">
-    						<label><input type="checkbox" value="{{team.$id}}" 
+    					 <div class="button" data-toggle="buttons" value="{{team.$id}}">
+							<label class="btn btn-info">
+    						<input type="checkbox" checked autocomplete="off"
     						  ng-checked="selection.indexOf(team.$id) > -1"
     						  ng-click="toggleSelection(team.$id)">
     						{{team.$id}}</label><br>
     						
     						Wanted skills:
-    						<li class="list-group-item" ng-repeat="skill in team.wantedSkills">
-    							<button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button>
-    						</li> 
+						<!--li class="list-group-item">Skills:
+							<ul class="list-group">
+								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
+							</ul>
+						</li-->
+    						
+							<ul class="list-group">
+								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in team.wantedSkills">{{skill}}</li>
+							</ul>
+    							<!--button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button-->
+    						
     						
     					 </div>
+						 </div>
     					  <br>
   				      </div>
-            </div>
+					</div>
             <div class="col-sm-6 text-left">
               <h3>Your team invites:</h3>
               <div ng-repeat="t in invitedTeams">
