@@ -19,7 +19,7 @@ angular.module('teamform-member-app', ['firebase'])
 	initalizeFirebase();
 	$scope.userID = "";
 	$scope.userName = "";
-
+	$scope.selection = [];
 	firebase.auth().onAuthStateChanged(function(user){
 		if (user) {
 			$scope.userID = user.uid;
@@ -132,24 +132,33 @@ angular.module('teamform-member-app', ['firebase'])
 			// Database connection error handling...
 			// console.error("Error:", error);
 		});
-
+	}
 		
 		// Link and sync a firebase object
-		$scope.selection = [];		
+				
 		$scope.toggleSelection = function (item) {
+			console.log(item);
 			var idx = $scope.selection.indexOf(item);    
 			if (idx > -1) {
 				$scope.selection.splice(idx, 1);
+				document.getElementById('update-status').textContent = 'Removed team preference';
+				$('#alert').removeClass("alert-success");
+				$('#alert').addClass("alert-danger");
 			}
 			else {
 				$scope.selection.push(item);
+				document.getElementById('update-status').textContent = 'Updated team preference';
+				$('#alert').removeClass("alert-danger");
+				$('#alert').addClass("alert-success");
 			}
 			var userID = $.trim($scope.userID);
 			var selection_refPath = "events/" + getURLParameter("q") + "/member/" + userID;
 			var selection_ref = firebase.database().ref(selection_refPath);
 			selection_ref.child("selection").set($scope.selection);
+			//document.getElementById('update-status').textContent = 'Updated team preference';
+			$('#alert').show();
 		}
-	}
+	
 	$scope.acceptInvite = function(teamID){
 		//add member to /events/<event>/team/<team>/teamMembers
 		//remove entry in /events/<event>/member/<UID>/invites/<team>

@@ -36,6 +36,9 @@
    <br>
 
    <div class="text-center">
+      <div id="alert" class="alert alert-success" role="alert" hidden>
+        <h4 id="alert-title"><div id="update-status"></div></h4>
+      </div>
       <h1>Member Page</h1>
       <h2 id="text_event_name"></h2>
       <h4 id="uid"></h4>
@@ -80,31 +83,30 @@
 			     <div class="row-fluid">
 			       <div class="col-sm-6 text-left">
     				    <h3>Your team preference:</h3>
-    			       <div ng-repeat="team in teams">
-    					 <div class="button" data-toggle="buttons" >
-							<label class="btn btn-info">
-    						<input type="checkbox" value="{{team.$id}}" checked autocomplete="off"
-    						  ng-checked="selection.indexOf(team.$id) > -1"
-    						  ng-click="toggleSelection(team.$id)">
-    						{{team.$id}}</label><br>
-    						
-    						Wanted skills:
-						<!--li class="list-group-item">Skills:
-							<ul class="list-group">
-								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
-							</ul>
-						</li-->
-    						
-							<ul class="list-group">
-								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in team.wantedSkills">{{skill}}</li>
-							</ul>
+    			        <div ng-repeat="team in teams">
+    						 
+        						<input  type="button" value="{{team.$id}}" checked autocomplete="off"
+        						  ng-checked="selection.indexOf(team.$id) > -1"
+        						  ng-click="toggleSelection(team.$id)"
+                      ng-class="{'btn btn-info':selection.indexOf(team.$id) <= -1, 'btn btn-success':selection.indexOf(team.$id) > -1}">
+        						<br>
+        						
+        						Wanted skills:
+    						<!--li class="list-group-item">Skills:
+    							<ul class="list-group">
+    								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
+    							</ul>
+    						</li-->
+        						
+    							<ul class="list-group">
+    								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in team.wantedSkills">{{skill}}</li>
+    							</ul>
     							<!--button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button-->
     						
     						
-    					 </div>
-						 </div>
+						    </div>
     					  <br>
-  				      </div>
+  				  </div>
 					</div>
             <div class="col-sm-6 text-left">
               <h3>Your team invites:</h3>
