@@ -45,7 +45,8 @@
 
          <div class="row">
 
-            <div class="col-md-2 col-xs-2"></div>
+            
+			<div class="col-md-2 col-xs-2"></div>
 
             <div class="col-md-6 col-xs-6 text-left panel">
 			
@@ -113,7 +114,7 @@
 						  
 					   </span>
 				   </div>
-				   
+				   <br>
 				   
 
                   </form>
@@ -121,79 +122,60 @@
 
 				<div class="row">
                   <div class="col-sm-6">
-                     <h4>Team members</h4>
+                 	 <div class="panel-group">
+			         	<div class="panel panel-primary">
+			            <div class="panel-heading">
+                    	 <h4 class="panel-title">Team members</h4>
+                    	 </div>
                      <!-- TODO: Show the current team member list -->
-					 
-					 <div ng-repeat="member in param.teamMembers">
+					 <ul class="list-group" ng-repeat="member in param.teamMembers">
+					 	<li class="list-group-item list-group-item-info hideOverflow">
+	                 		<button type="button" class="btn btn-xs btn-warning" ng-click="removeMember(member);">
+	                    		<span class="glyphicon glyphicon-trash"></span>
+	                  		</button> {{member}}</li>
+					 </ul>
+					 <!--div ng-repeat="member in param.teamMembers">
 						<button type="button" class="btn" ng-click="removeMember(member);">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {{member}}
 						</button>
 						<br>
+					 </div-->
 					 </div>
-					 
+					 </div>
                   </div>
 
                   <div class="col-sm-6">
-                     <h4>Requests received:</h4>
-
+                  	<div class="panel-group">
+			        	<div class="panel panel-warning">
+			            <div class="panel-heading">
+                    		<h4 class="panel-title">Requests received:</h4>
+                    	</div>
                      <!--TODO: Show the requests -->
-					 
-					 <div ng-repeat="r in requests">
+						<ul class="list-group" ng-repeat="r in requests">
+							<li class="list-group-item list-group-item-info hideOverflow">
+								<button type="button" class="btn btn-xs btn-success" ng-click="processRequest(r);">
+									<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+								</button> {{r}}</li>
+						</ul>
+					 <!--div ng-repeat="r in requests">
 						<button type="button" class="btn" ng-click="processRequest(r);">
 							<span class="glyphicon glyphicon-backward" aria-hidden="true"></span> {{r}}
 						</button>
-					 </div>
-					 
+					 </div-->
+					 	</div>
                   </div>
 				</div>
 
  				</div>
  								  
             </div>
+            </div>
+			
+				
 
-            				<!-- Holding Meeting -->
- 				<div class="row-fluid" id="meeting">
- 					<div class="col-sm-12">
- 						<div class="page-header">
- 				  			<h1>Holding your team's first meeting!</h1>
- 						</div>
- 						<div class="row">
- 							<form name="form" class="css-form col-md-4" novalidate>
- 								<div class="form-group">
- 									<label>Date: <span class="required" ng-show="form.holddate.$error.required">*</span></label>
- 									<input type="datetime-local" name="holddate" ng-model="meetinginput.holddate" required>
- 									<label>Description:</label>
- 									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Question content..." required></textarea>
- 									<br><br>
- 									<input class="btn btn-primary" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="!meetinginput.desc ||!meetinginput.holddate">
- 								</div>
- 							
- 							</form>
- 
- 						<div class="css-form col-md-8" >
- 						<h1>Your First Meeting:</h1>
-	 						<div class="panel panel-success" ng-repeat="meeting in meetings | filter:meeting_teamName:true">
-	 							<div class="panel-heading"><span class="label label-default"><span class="glyphicon glyphicon-blackboard" align="center"></span></span>  {{showDate(meeting.holddate)}} {{showTime(meeting.holddate)}}
-	 							</div>
-	 							<div class="panel-body">{{meeting.desc}}</div>			
-	 							<div class="panel-footer">
-	 								<button class="btn btn-primary" type="button" ng-click="meeting.joins = meeting.joins+1; meetings.$save(meeting);">
-	 									<span class="glyphicon glyphicon-ok"></span> Join!
-	 									<span class="badge"> {{meeting.joins}}</span> 
-	 								</button>
-	 							 </div>
- 							 </div>
- 						</div>
- 
- 						</div>
- 					</div>
- 
- 					</div>
-
- 					<!-- End of Meeting Section -->  
 
  			<div class="row-fluid"> 
-            	<div class="col-sm-4 text-left">
+            	<div class="col-sm-3">
 			
 					
 			 
@@ -209,53 +191,54 @@
 						
 					</ul>-->			
 					<div class="panel-group">
-  					<div class="panel panel-default">
+  					<div class="panel panel-warning">
     				<div class="panel-heading">
 						<h3 class="panel-title"><a data-toggle="collapse" href="#collapse1">All teams:</a></h3>
 					</div>
 					<div id="collapse1" class="panel-collapse collapse">
 					<ul class="list-group" ng-repeat="t in team">
-						<li class="list-group-item">
-							
-							Team Name: {{t.$id}}  <br>
-							Preferred team size: {{t.size}}<br>
-							Current team members:
-							<li class="btn-group" ng-repeat="member in t.teamMembers">
-								<!--<button type="button" class="btn btn-primary btn-sm btn-space">{{member}}</button>-->
-								<div class="alert alert-info hideOverflow" role="alert">{{member}}</div>
-							</li> <br>
-							Wanted Skills:
-							<li class="btn-group" ng-repeat="skill in t.wantedSkills track by $index">
-								<div class="alert alert-info" role="alert">{{skill}}</div>
-							</li> <br>
-    						<button type="button" class="btn btn-primary" ng-click="requestToMerge(t.$id,t.size,t.teamMembers)">Request to Merge To</button>	
-						</li>
-						
-					</ul>
+						<li class="list-group-item">Team Name: {{t.$id}}</li>
+			            <li class="list-group-item">Preferred team size: {{t.size}}</li>
+			            <li class="list-group-item">Current team members:
+			              <ul class="list-group">
+			                <li class="list-group-item list-group-item-info hideOverflow" ng-repeat="member in t.teamMembers">{{member}}
+			                <!--span class="pull-right">
+			                  <button class="btn btn-xs btn-warning">
+			                    <span class="glyphicon glyphicon-trash"></span>
+			                  </button>
+			                </span-->
+			                </li>
+			              </ul>
+			            </li>
+			            <li class="list-group-item">Wanted Skills:
+			              <ul class="list-group">
+			                <li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in t.wantedSkills track by $index">{{skill}}</li>
+			              </ul>
+			            </li>
+    					<li class="list-group-item" id="requestMerge"><button type="button" class="btn btn-warning" ng-click="requestToMerge(t.$id,t.size,t.teamMembers)">Request to Merge To</button></li>
+    				</ul>
 					</div>
 					</div>
 					</div>
 				</div>
 
-				<div class="col-sm-4 text-left">
+				<div class="col-sm-3">
 					<div class="panel-group">
-	  					<div class="panel panel-default">
+	  					<div class="panel panel-primary">
 	    				<div class="panel-heading">
 							<h3 class="panel-title"><a data-toggle="collapse" href="#collapse2">All event members:</a></h3>
 						</div>
 					<div id="collapse2" class="panel-collapse collapse">
 					<ul class="list-group" ng-repeat="m in eventUsers">
-						<li class="list-group-item">
 							
-							Email: {{m.email}}  <br>
-							Name: {{m.name}} <br>
-							Skills:
-							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
-								<div class="alert alert-info" role="alert">{{skill}}</div>
-							</li> <!--<div style="line-height:100%;">-->
-							<br>
-							<!--</div> -->
-							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+						<li class="list-group-item">Email: {{m.email}} </li>
+						<li class="list-group-item">Name: {{m.name}} </li>
+						<li class="list-group-item">Skills:
+							<ul class="list-group">
+								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
+							</ul>
+						</li>
+						<li class="list-group-item"><button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button></li>
 						</li>
 					</ul>
 					</div>
@@ -263,37 +246,78 @@
 					</div>
 				</div>
 
-				<div class="col-sm-4 text-left">
+				<div class="col-sm-3">
 					<div class="panel-group">
-	  					<div class="panel panel-default">
+	  					<div class="panel panel-success">
 	    				<div class="panel-heading">
 							<h3 class="panel-title"><a data-toggle="collapse" href="#collapse3">Suggested members:</a></h3>
 						</div>
 					<div id="collapse3" class="panel-collapse collapse">
 					<ul class="list-group" ng-repeat="m in filteredUsers">
-						<li class="list-group-item">
-							
-							Email: {{m.email}}  <br>
-							Name: {{m.name}} <br>
-							Skills:
-							<li class="btn-group" ng-repeat="skill in m.skills track by $index">
-								<div class="alert alert-info" role="alert">{{skill}}</div>
-							</li> <!--<div style="line-height:100%;">-->
-							<br>
-							<!--</div> -->
-							<button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button>
+						<li class="list-group-item">Email: {{m.email}} </li>
+						<li class="list-group-item">Name: {{m.name}} </li>
+						<li class="list-group-item">Skills:
+						<ul class="list-group">
+							<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
+						</ul>
+						</li>
+						<li class="list-group-item"><button type="button" class="btn btn-success" ng-click="inviteToTeam(m.$id)">Invite</button></li>
 						</li>
 					</ul>
 					</div>
 					</div>
 					</div>
 				</div>
+				
+            				<!-- Holding Meeting -->
+ 				<div class="row-fluid" id="meeting">
+ 					<div class="col-sm-3">
+ 						<div class="panel-group">
+	  					<div class="panel panel-info">
+	    				<div class="panel-heading">
+ 				  			<h3 class="panel-title"><a data-toggle="collapse" href="#collapse4">Hold/Join meetings</a></h3>
+ 						</div>
+						<div id="collapse4" class="panel-collapse collapse">
+ 						<div class="row">
+ 							<form name="form" class="css-form col-md-12" novalidate>
+ 								<div class="form-group"><br>
+ 									<label>Date: <span class="required" ng-show="form.holddate.$error.required">*</span></label>
+ 									<input type="datetime-local" name="holddate" ng-model="meetinginput.holddate" required>
+ 									<label>Description:</label>
+ 									<textarea class="form-control" name="desc" ng-model="meetinginput.desc" placeholder="Purpose(s) for meeting..." required></textarea>
+ 									<br><br>
+ 									<input class="btn btn-info" type="button" value="Hold" ng-click="addMeeting()" ng-disabled="!meetinginput.desc ||!meetinginput.holddate">
+ 								</div>
+ 							
+ 							</form>
+ 
+ 						<div class="css-form col-md-12" >
+ 						<h5>Your Meeting(s):</h5>
+	 						<div class="panel panel-info" ng-repeat="meeting in meetings | filter:meeting_teamName:true">
+	 							<div class="panel-heading"><span class="label label-default"><span class="glyphicon glyphicon-blackboard" align="center"></span></span>  {{showDate(meeting.holddate)}} {{showTime(meeting.holddate)}}
+	 							</div>
+	 							<div class="panel-body">{{meeting.desc}}</div>			
+	 							<div class="panel-footer">
+	 								<button class="btn btn-info" type="button" ng-click="meeting.joins = meeting.joins+1; meetings.$save(meeting);">
+	 									<span class="glyphicon glyphicon-ok"></span> Join!
+	 									<span class="badge"> {{meeting.joins}}</span> 
+	 								</button>
+	 							 </div>
+ 							 </div>
+ 						</div>
+ 
+ 						</div>
+ 					</div>
+					</div>
+ 					</div>
+				</div>
+ 					<!-- End of Meeting Section -->  
 
 				<div class="col-md-12 col-xs-12 text-left-panel">
 					<h3>Team merge invites:</h3>
 		            <div ng-repeat="t in invitedTeams">
 		                {{t.$id}}
-		                <button type="button" class="btn btn-primary" ng-click="acceptMerge(t.$id)">Accept Invite</button>
+		                <button type="button" class="btn btn-success" ng-click="acceptMerge(t.$id)">Accept Invite</button>
 		            </div>
 	            </div>
          </div>
