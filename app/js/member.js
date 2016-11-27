@@ -37,6 +37,8 @@ angular.module('teamform-member-app', ['firebase'])
 			$scope.invitedTeams = $firebaseArray(invited_ref);
 			//console.log(invited_refPath);
 			//console.log($scope.invitedTeams);	
+
+			//$scope.showFilterTeams();
 		}
 		else{
 			$scope.userID = "";
@@ -45,14 +47,15 @@ angular.module('teamform-member-app', ['firebase'])
 			//window.alert("Please login");
 			window.location.href= "redirect.html";
 		}
-
+		$scope.apply();
 	})	
 
 	//$scope.userID = "";
 	//$scope.userName = "";	
-	$scope.teams = {};
+	$scope.teams = [];
 	$scope.teamMembers = [];
 	$scope.currentTeamSize = 0;
+	$scope.filteredTeams = [];
 	//$scope.invitedTeams = {};
 		//if (!checkLoginstate()){
 		//window.alert("Please login");
@@ -126,7 +129,8 @@ angular.module('teamform-member-app', ['firebase'])
 		var ref = firebase.database().ref(refPath);
 	
 		$scope.teams = $firebaseArray(ref);
-		$scope.teams.$loaded().then( function(data) {				
+		$scope.teams.$loaded().then( function(data) {
+			$scope.showFilterTeams();
 		}) 
 		.catch(function(error) {
 			// Database connection error handling...
@@ -150,6 +154,7 @@ angular.module('teamform-member-app', ['firebase'])
 			selection_ref.child("selection").set($scope.selection);
 		}
 	}
+
 	$scope.acceptInvite = function(teamID){
 		//add member to /events/<event>/team/<team>/teamMembers
 		//remove entry in /events/<event>/member/<UID>/invites/<team>
@@ -200,7 +205,32 @@ angular.module('teamform-member-app', ['firebase'])
         });
 		//$scope.$apply();
 	};
-	
+
+	$scope.showFilterTeams = function(){
+		$scope.filteredTeams = [];
+		var userID = $.trim( $scope.userID );
+		var refPath = "users/" + userID;
+		var userSkills_ref = firebase.database().ref(refPath);
+		$scope.teams.$loaded().then(function(){
+			userSkills_ref.on("value", function(snapshot){
+				snapshot.child("skills").forEach(function(childSnapshot){
+					$.each($scope.teams, function(i,obj){
+						// team's wantedSkills is not undefined
+						if(obj.wantedSkills != undefined){
+							// team's wantedSkills matched user's skills 
+							if(obj.wantedSkills.hasOwnProperty(childSnapshot.val())){
+								// Prevent duplicated obj added to the filteredTeams
+								if($scope.filteredTeams.indexOf(obj) == -1){
+									$scope.filteredTeams.push(obj);
+								}								
+							}
+						}
+					});
+				});
+				$scope.$apply();
+			});
+		});
+	}
 	$scope.refreshTeams(); // call to refresh teams...
 
 }]);

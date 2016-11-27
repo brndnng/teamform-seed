@@ -630,7 +630,7 @@ angular.module('teamform-team-app', ['firebase'])
 				$.each($scope.eventUsers, function(i,obj){
 					// If the user's skills are defined
 					if(obj.skills != undefined){
-						// childSnapshot.val() is the wantedSkill
+						// user has the wantedSkill
 						if(obj.skills.hasOwnProperty(childSnapshot.val())){
 							// Prevent duplicated obj added to the filteredUsers
 							if($scope.filteredUsers.indexOf(obj) == -1){
