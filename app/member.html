@@ -83,7 +83,13 @@
          </div>
 			     <div class="row-fluid">
 			       <div class="col-sm-6 text-left">
-    				    <h3>Your team preference:</h3>
+              <div class="panel-group">
+                <div class="panel panel-warning">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><a data-toggle="collapse" href="#collapse1">Your team preference</a></h3>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                  <br>
     			        <div ng-repeat="team in teams">
     						 
         						<input  type="button" value="{{team.$id}}" checked autocomplete="off"
@@ -105,25 +111,35 @@
     							<!--button type="button" class="btn btn-primary btn-sm btn-space">{{skill}}</button-->
     						
     						
-						    </div>
-    					  <br>
+						      </div>
+                </div>
+    					  </div>
+                </div>
   				  </div>
 
           <div class="col-sm-6 text-left">
-            <h3>Suggested teams:</h3>
-            <div ng-repeat="f in filteredTeams">
-              <input type="button" value="{{f.$id}}" checked autocomplete="off"
-                      ng-checked="selection.indexOf(f.$id) > -1"
-                      ng-click="toggleSelection(f.$id)"
-                      ng-class="{'btn btn-info':selection.indexOf(f.$id) <= -1, 'btn btn-success':selection.indexOf(f.$id) > -1}">
-                    <br>
+              <div class="panel-group">
+                <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><a data-toggle="collapse" href="#collapse2">Suggested teams</a></h3>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                  <br>
+                <div ng-repeat="f in filteredTeams">
+                  <input type="button" value="{{f.$id}}" checked autocomplete="off"
+                        ng-checked="selection.indexOf(f.$id) > -1"
+                        ng-click="toggleSelection(f.$id)"
+                        ng-class="{'btn btn-info':selection.indexOf(f.$id) <= -1, 'btn btn-success':selection.indexOf(f.$id) > -1}">
+                      <br>
 
-                  Wanted skills:
-                  <ul class="list-group">
-                    <li class="list-group-item list-group-item-info hideOverflow" ng-repeat="FT_skills in f.wantedSkills">{{FT_skills}}</li>
-                  </ul>
+                    Wanted skills:
+                    <ul class="list-group">
+                      <li class="list-group-item list-group-item-info hideOverflow" ng-repeat="FT_skills in f.wantedSkills">{{FT_skills}}</li>
+                    </ul>
+                </div>
+                </div>
+                </div>
               </div>
-            </div>
           </div>
           <div class="row">
             <div class="col-sm-4 text-left">
