@@ -30,7 +30,7 @@
 
             user.getToken().then(function(accessToken) {
               document.getElementById('sign-in-status').textContent = 'Signed in';
-              document.getElementById('user-info').style.display = 'block';
+              //document.getElementById('user-info').style.display = 'block';
               document.getElementById('name').textContent = user.displayName;
               document.getElementById('email').textContent = user.email;
               document.getElementById('showInfo').style.display = 'block';
@@ -140,7 +140,7 @@
                 document.getElementById('photo').src = photoURL;
         document.getElementById('photo').style.display = 'block';
               }
-              document.getElementById('account-details').textContent = JSON.stringify({
+              /*document.getElementById('account-details').textContent = JSON.stringify({
                 displayName: displayName,
                 email: email,
                 emailVerified: emailVerified,
@@ -148,7 +148,7 @@
                 uid: uid,
                 accessToken: accessToken,
                 providerData: providerData
-              }, null, '  ');
+              }, null, '  ');*/
 
 
             });

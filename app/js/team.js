@@ -485,35 +485,51 @@ angular.module('teamform-team-app', ['firebase'])
 	};
 	
 	$scope.requestToMerge = function(teamToMerge,teamSize,teamMembers){
+		console.log(teamSize);
+		console.log(typeof teamMembers);
+		console.log(teamToMerge);
 		var teamID = $.trim( $scope.param.teamName );
 		var eventName = getURLParameter("q");
 		var refPath = "events/" + eventName + "/team/" + teamToMerge + "/mergeRequests";
 		var invites_ref = firebase.database().ref(refPath);
+		console.log(teamID);
 		//console.log(teamMembers.length);
 		//console.log($scope.param.teamMembers.length);
 		//console.log($scope.param.currentTeamSize);
-		invites_ref.once("value").then(function(snapshot){
-            // Check if merge invite is sent
-            var hasInvite = snapshot.hasChild(teamID);
-            // If not invited, send invite
-            if(!hasInvite){
-            	if (teamMembers.length + $scope.param.teamMembers.length <= $scope.param.currentTeamSize){
-                	invites_ref.child(teamID).set(teamID);
-                	invite = "success";
-            	}
-            	else {
-            		var repeatedNotice = "Merged team size will exceed Prefered team size.";
-                	invite = "success";
-                	window.alert(repeatedNotice);
-                }
-            }
-            else{
-            	//Invited already
-                var repeatedNotice = "Team already invited.";
-                invite = "success";
-                window.alert(repeatedNotice);
-            }
-        });
+		if(typeof teamMembers != "undefined" && teamToMerge != teamID){
+			invites_ref.once("value").then(function(snapshot){
+	            // Check if merge invite is sent
+	            var hasInvite = snapshot.hasChild(teamID);
+	            // If not invited, send invite
+	            if(!hasInvite){
+	            	if (teamMembers.length + $scope.param.teamMembers.length <= $scope.param.currentTeamSize){
+	                	invites_ref.child(teamID).set(teamID);
+	                	invite = "success";
+	            	}
+	            	else {
+	            		var repeatedNotice = "Merged team size will exceed Prefered team size.";
+	                	invite = "success";
+	                	window.alert(repeatedNotice);
+	                }
+	            }
+	            else{
+	            	//Invited already
+	                var repeatedNotice = "Team already invited.";
+	                invite = "success";
+	                window.alert(repeatedNotice);
+	            }
+	        });
+		}
+		else if (teamToMerge == teamID){
+			var repeatedNotice = "Cannot invite own team.";
+	        invite = "success";
+	        window.alert(repeatedNotice);
+		}
+		else{
+			var repeatedNotice = "Cannot join an empty team.";
+	        invite = "success";
+	        window.alert(repeatedNotice);
+		};
 	};
 
 	$scope.acceptMerge = function(teamToMerge){
