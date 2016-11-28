@@ -15,7 +15,7 @@
             // Check if UID exists in firebase
             ref.once("value").then(function(snapshot){
               var hasUser = snapshot.hasChild(user.uid);
-              if (!hasUser)
+              if (!hasUser){
                 var newUser = ref.child(user.uid).set(
                   {"name":user.displayName,
                    "skills":"(placeholder)",
@@ -25,8 +25,9 @@
                    //"events_admin": "(placeholder)"
 
                 });
+              }
             });
-			localStorage.setItem('_uid', user.uid);
+			      localStorage.setItem('_uid', user.uid);
 
             user.getToken().then(function(accessToken) {
               document.getElementById('sign-in-status').textContent = 'Signed in';
@@ -37,12 +38,10 @@
 
               //show Info
               var query = firebase.database().ref("users/").orderByKey();
-              query.once("value")
-                .then(function(snapshot) {
+              query.once("value").then(function(snapshot) {
                   snapshot.forEach(function(childSnapshot) {
 
-                    if(childSnapshot.key==user.uid) //check user id
-                    {
+                    if(childSnapshot.key==user.uid){ //check user id
                       // childData will be the actual contents of the child
                       var userSource = childSnapshot.val();
 
@@ -125,20 +124,19 @@
                             document.getElementById('showInfo').innerHTML += "<span class=\"label label-info\">Member</span>";
                           document.getElementById('showInfo').innerHTML += "<br>";
                         }
-
+                    }
                       //break;
-                  }
                 });
               });
-
 
               if (user.photoURL){
                 document.getElementById('photo').src = user.photoURL;
                 document.getElementById('photo').style.display = 'block';
-              } else {
-        photoURL = 'placeholder.svg';
+              } 
+              else {
+                photoURL = 'placeholder.svg';
                 document.getElementById('photo').src = photoURL;
-        document.getElementById('photo').style.display = 'block';
+                document.getElementById('photo').style.display = 'block';
               }
               /*document.getElementById('account-details').textContent = JSON.stringify({
                 displayName: displayName,
@@ -155,15 +153,14 @@
           } else {
             // User is signed out.
             document.getElementById('sign-in-status').textContent = 'Signed out';
-            document.getElementById('account-details').textContent = '';
+            document.getElementById('name').textContent = '';
+            document.getElementById('photo').style.display = 'none';
             document.getElementById('user-info').style.display = 'none';
             document.getElementById('showInfo').style.display = 'none';
             document.getElementById('showInfo').innerHTML = "";
-			
-			var checkUID = localStorage.getItem('_uid');
-			if(checkUID!=null)
-				localStorage.removerItem('_uid');
-
+			      var checkUID = localStorage.getItem('_uid');
+			      if(checkUID!=null)
+				      localStorage.removerItem('_uid');
           }
         }, function(error) {
           console.log(error);
@@ -176,7 +173,6 @@
       window.addEventListener('load', function() {
         initApp()
       });
-
 //Passing Team Name to teampage
 function passTeamName(T,E) {
   var url = "team.html?q=" + E;
