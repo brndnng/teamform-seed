@@ -223,11 +223,7 @@ angular.module('teamform-team-app', ['firebase'])
 			exists=snapshot.hasChild("teamLeader");
 			console.log(exists);
 		
-		if (exists){
-			console.log("already exists");
-			window.alert("Team already exists!");
-		}
-		else if ( teamID !== '') {
+		if ( teamID !== '') {
 			var current_uid=document.getElementById('uid').textContent;
 			var newData = {				
 				'size': $scope.param.currentTeamSize,

@@ -238,7 +238,7 @@
 								<li class="list-group-item list-group-item-info hideOverflow" ng-repeat="skill in m.skills track by $index">{{skill}}</li>
 							</ul>
 						</li>
-						<li class="list-group-item"><button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)">Invite</button></li>
+						<li class="list-group-item"><button type="button" class="btn btn-primary" ng-click="inviteToTeam(m.$id)" ng-disabled="$scope.param.teamMembers.indexOf(m.$id) >= 0">Invite</button></li>
 						</li>
 					</ul>
 					</div>
