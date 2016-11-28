@@ -147,6 +147,7 @@ angular.module('teamform-member-app', ['firebase'])
 			var userID = $.trim($scope.userID);
 			
 			var idx = $scope.selection.indexOf(item);    
+			ref.once("value").then(function(snapshot) {
 			if (idx > -1) {
 				$scope.selection.splice(idx, 1);
 				document.getElementById('update-status').textContent = 'Removed team preference';
@@ -154,9 +155,9 @@ angular.module('teamform-member-app', ['firebase'])
 				$('#alert').addClass("alert-danger");
 			}
 			else {
-				ref.once("value").then(function(snapshot) {
-				if ( snapshot.child("size").val() != null && snapshot.child("teamMembers").val() != null ) {
-					if (!snapshot.forEach(function(childSnapshot){
+				
+				//if ( snapshot.child("size").val() != null && snapshot.child("teamMembers").val() != null ) {
+					if (snapshot.child("teamMembers").val() == null || !snapshot.forEach(function(childSnapshot){
 						if (childSnapshot.val() == userID){
 							return true;
 						}
@@ -166,8 +167,13 @@ angular.module('teamform-member-app', ['firebase'])
 						$('#alert').removeClass("alert-danger");
 						$('#alert').addClass("alert-success");
 					}
-				}
-				});
+					else {
+						document.getElementById('update-status').textContent = 'You are already in the team!';
+						$('#alert').removeClass("alert-success");
+						$('#alert').addClass("alert-danger");
+					}
+				//}
+				
 				
 			}
 			//var userID = $.trim($scope.userID);
@@ -178,6 +184,8 @@ angular.module('teamform-member-app', ['firebase'])
 			selection_ref.child("selection").set($scope.selection);
 			//document.getElementById('update-status').textContent = 'Updated team preference';
 			$('#alert').show();
+			$scope.$apply();
+			});
 		}
 
 
