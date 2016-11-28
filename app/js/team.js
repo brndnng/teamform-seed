@@ -222,9 +222,11 @@ angular.module('teamform-team-app', ['firebase'])
 		ref.once("value").then(function(snapshot){
 			exists=snapshot.hasChild("teamLeader");
 			console.log(exists);
-		});
-		if (exists)
-			return;
+		
+		if (exists){
+			console.log("already exists");
+			window.alert("Team already exists!");
+		}
 		else if ( teamID !== '') {
 			var current_uid=document.getElementById('uid').textContent;
 			var newData = {				
@@ -287,7 +289,7 @@ angular.module('teamform-team-app', ['firebase'])
 			
 		}
 		
-		
+		});
 	}
 	
 	$scope.loadFunc = function() {
