@@ -142,6 +142,10 @@ angular.module('teamform-member-app', ['firebase'])
 				
 		$scope.toggleSelection = function (item) {
 			console.log(item);
+			var refPath = "events/" + getURLParameter("q") + "/team/" + item ;
+			var ref = firebase.database().ref(refPath);
+			var userID = $.trim($scope.userID);
+			
 			var idx = $scope.selection.indexOf(item);    
 			if (idx > -1) {
 				$scope.selection.splice(idx, 1);
@@ -150,14 +154,27 @@ angular.module('teamform-member-app', ['firebase'])
 				$('#alert').addClass("alert-danger");
 			}
 			else {
-				$scope.selection.push(item);
-				document.getElementById('update-status').textContent = 'Updated team preference';
-				$('#alert').removeClass("alert-danger");
-				$('#alert').addClass("alert-success");
+				ref.once("value").then(function(snapshot) {
+				if ( snapshot.child("size").val() != null && snapshot.child("teamMembers").val() != null ) {
+					if (!snapshot.forEach(function(childSnapshot){
+						if (childSnapshot.val() == userID){
+							return true;
+						}
+					})){
+						$scope.selection.push(item);
+						document.getElementById('update-status').textContent = 'Updated team preference';
+						$('#alert').removeClass("alert-danger");
+						$('#alert').addClass("alert-success");
+					}
+				}
+				});
+				
 			}
-			var userID = $.trim($scope.userID);
+			//var userID = $.trim($scope.userID);
+			var userName = $.trim( $scope.userName );
 			var selection_refPath = "events/" + getURLParameter("q") + "/member/" + userID;
 			var selection_ref = firebase.database().ref(selection_refPath);
+			selection_ref.child("name").set(userName);
 			selection_ref.child("selection").set($scope.selection);
 			//document.getElementById('update-status').textContent = 'Updated team preference';
 			$('#alert').show();
